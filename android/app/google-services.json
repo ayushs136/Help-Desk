@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "235878455861",
+    "firebase_url": "https://help-desk-247a9.firebaseio.com",
+    "project_id": "help-desk-247a9",
+    "storage_bucket": "help-desk-247a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235878455861:android:5a2049715d83a3e8792f7c",
+        "android_client_info": {
+          "package_name": "com.clintonfredo.helpdesk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235878455861-kiqbigenboj6cip8fcna5sk8t7vmm7ns.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.clintonfredo.helpdesk",
+            "certificate_hash": "69841240c2f4a8c759568c07f6449ab6f7eb82bf"
+          }
+        },
+        {
+          "client_id": "235878455861-3fppaeemrqadinof7amdbis7gafbsk1n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlMW-NHHsR5M5ieSamNgb0d_x2-jRImbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235878455861-3fppaeemrqadinof7amdbis7gafbsk1n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
