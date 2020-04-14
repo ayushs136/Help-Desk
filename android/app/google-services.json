@@ -42,6 +42,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235878455861:android:72dd4d67ba866286792f7c",
+        "android_client_info": {
+          "package_name": "com.clintonfredo.helpdesk2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235878455861-3fppaeemrqadinof7amdbis7gafbsk1n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlMW-NHHsR5M5ieSamNgb0d_x2-jRImbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235878455861-3fppaeemrqadinof7amdbis7gafbsk1n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
