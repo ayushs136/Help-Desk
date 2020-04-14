@@ -1,16 +1,12 @@
-# helpdesk_2
 
-A new Flutter project.
 
-## Getting Started
+# HELP - DESK 
 
-This project is a starting point for a Flutter application.
+An mobile application to find someone who can help wherever you need!
+from learning something to completing any task,
+you can find the person who can help you.
 
-A few resources to get you started if this is your first Flutter project:
+The helper gets experiece of helping
+apart from that a great life experience!
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Launching Soon!
