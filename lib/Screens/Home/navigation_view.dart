@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_2/models/customer.dart';
+import 'package:helpdesk_2/models/skills.dart';
 import 'package:helpdesk_2/screens/authentication/auth_services.dart';
 import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 import 'package:helpdesk_2/screens/home/UpdateSkills.dart';
 
-import 'package:helpdesk_2/screens/home/customers_near_by.dart';
+import 'package:helpdesk_2/screens/home/helper_list_screen.dart';
 import 'package:helpdesk_2/screens/home/pages.dart';
 
 
@@ -31,19 +32,20 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final newCustomer = new Customer();
+    final newSkills = new Skills();
     return Scaffold(
 
       backgroundColor: Color(0xff000000),
       appBar: AppBar(
         backgroundColor: Color(0xff232d36),
-        title: Text("Helpers"),
+        title: Text("Helpers Desk View"),
                             elevation: 30,
 
         actionsIconTheme:
             IconThemeData(color: Colors.white, opacity: 10, size: 90),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.update),
+            icon: Icon(Icons.edit),
             
             onPressed: () {
               Navigator.push(
@@ -51,11 +53,12 @@ class _HomeState extends State<Home> {
                   MaterialPageRoute(
                       builder: (context) => UpdateSkills(
                             customer: newCustomer,
+                            skills: newSkills,
                           )));
             },
           ),
           IconButton(
-            icon: Icon(Icons.undo),
+            icon: Icon(Icons.exit_to_app),
             onPressed: () async {
               try {
                 AuthServices auth = Provider.of(context).auth;
@@ -66,15 +69,15 @@ class _HomeState extends State<Home> {
               }
             },
           ),
-          Visibility(
-            // visible:visible(),
-            child: IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                Navigator.of(context).pushNamed("/convertUser");
-              },
-            ),
-          ),
+          // Visibility(
+          //   // visible:visible(),
+          //   child: IconButton(
+          //     icon: Icon(Icons.account_circle),
+          //     onPressed: () {
+          //       Navigator.of(context).pushNamed("/convertUser");
+          //     },
+          //   ),
+          // ),
         ],
       ),
       body: _children[_currentIndex],
@@ -90,9 +93,9 @@ class _HomeState extends State<Home> {
                   style: TextStyle(color: Colors.white),
                 )),
             BottomNavigationBarItem(
-                icon: new Icon(Icons.web),
+                icon: new Icon(Icons.person),
                 title: new Text(
-                  "Google ",
+                  "Profile ",
                   style: TextStyle(color: Colors.white),
                 )),
             // BottomNavigationBarItem(

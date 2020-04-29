@@ -89,8 +89,9 @@ class _SignUpViewState extends State<SignUpView> {
             });
             break;
           case AuthFormType.anonymous:
-            await auth.signInAnonymously();
-            Navigator.of(context).pushReplacementNamed("/home");
+            // await auth.signInAnonymously();
+            // Navigator.of(context).pushReplacementNamed("/home");
+            Navigator.of(context).pushReplacementNamed("/signUp");
             break;
           case AuthFormType.convert:
             await auth.convertUserWithEmail(_email, _password, _name);

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart'  ;
+import 'package:helpdesk_2/shared/constants.dart';
 
 class AuthServices {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -34,11 +35,19 @@ Future<String> getCurrentUID() async{
   }
 
   Future updateUserName(String name, FirebaseUser currentUser) async {
-     var userUpdateInfo = UserUpdateInfo();
+    var userUpdateInfo = UserUpdateInfo();
+
+    String initials = Util.getInitials(name);
+    
     userUpdateInfo.displayName = name;
+    userUpdateInfo.photoUrl= initials;
+
     await currentUser.updateProfile(userUpdateInfo);
+    
     await currentUser.reload();
     print("create email password");
+
+
   }
 
   // Email & password Sign in
@@ -50,7 +59,8 @@ Future<String> getCurrentUID() async{
   }
 
   // Sign out
-  signOut() {
+  signOut() async{
+       await _googleSignIn.signOut();
     return _firebaseAuth.signOut();
   }
 
