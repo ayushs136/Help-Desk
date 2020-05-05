@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/customer.dart';
+import 'package:helpdesk_2/models/helper.dart';
 import 'package:helpdesk_2/models/skills.dart';
 import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 
 import 'package:helpdesk_2/shared/constants.dart';
 
 class UpdateSkills extends StatefulWidget {
-  final Customer customer;
+  final Helper helper;
   final Skills skills;
 
-  UpdateSkills({@required this.customer, @required this.skills, Key key});
+  UpdateSkills({@required this.helper, @required this.skills, Key key});
 
   @override
   _UpdateSkillsState createState() => _UpdateSkillsState();
@@ -20,7 +20,7 @@ class UpdateSkills extends StatefulWidget {
 class _UpdateSkillsState extends State<UpdateSkills> {
   final _db = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  Customer customer = new Customer();
+  Helper helper = new Helper();
   
     TextEditingController _skill1Controller = new TextEditingController();
     TextEditingController _skill2Controller = new TextEditingController();
@@ -128,7 +128,7 @@ class _UpdateSkillsState extends State<UpdateSkills> {
               // setState(() {
 
               setState(() {
-                widget.customer.skills = skillsList;
+                widget.helper.skills = skillsList;
                 // widget.skills.skill1 = skill1;
                 // widget.skills.skill2 = skill2;
                 // widget.skills.skill3 = skill3;
@@ -150,11 +150,11 @@ class _UpdateSkillsState extends State<UpdateSkills> {
 
               FirebaseUser currentUser;
               currentUser = await _auth.currentUser();
-              customer = Customer(
+              helper = Helper(
                 email: currentUser.email,
                 name: currentUser.displayName,
-                phone: currentUser.phoneNumber,
-                photoURL: currentUser.photoUrl,
+                phone: " ",
+                photoURL: " ",
                 isAvailable: true,
                 uid: uid,
                 skills: skillsList,
@@ -162,17 +162,25 @@ class _UpdateSkillsState extends State<UpdateSkills> {
               await _db
                   .collection('userData')
                   .document(uid)
-                  .setData(customer.toMap(customer));
+                  .setData(helper.toMap(helper));
 
               // await _db
               //     .collection("deskview")
               //     .document(uid)
-              //     .setData(widget.customer.toJSON());
+              //     .setData(widget.Helper.toJSON());
 
+
+              Skills skill;
+              skill = Skills(
+                skill1: skill1,
+                skill2: skill2,
+                skill3: skill3,
+                skill4: skill4,
+              );
               await _db
                   .collection("skillCollection")
                   .document(uid)
-                  .setData(widget.skills.skillJson(), merge: true);
+                  .setData(skill.toMap(skill));
 
               Navigator.pop(context);
               // }
