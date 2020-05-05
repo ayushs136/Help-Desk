@@ -32,6 +32,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   webview_flutter:
   flutter_launcher_icons: "^0.7.0"
+  gradient_app_bar: 0.0.1
 
   
 flutter_icons:

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:helpdesk_2/screens/home/custom_dialog.dart';
 
 class OnBoarding extends StatelessWidget {
-  final primaryColor = const Color(0xff75A2EA);
+  final primaryColor = const Color(0xff232d36);
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,16 @@ class OnBoarding extends StatelessWidget {
                     "Sign In",
                     style: TextStyle(color: Colors.white, fontSize: 25),
                   ),
-                )
+                ),
+                SizedBox(
+                  height:10,
+                ),
+Divider(color: Colors.black,),
+                Text(
+                    "Only Google sign In available!",
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                
               ],
             ),
           ),

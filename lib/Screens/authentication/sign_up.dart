@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:helpdesk_2/screens/authentication/auth_services.dart';
 import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 
-final primaryColor = const Color(0xFF75A2EA);
+final primaryColor = const Color(0xff232d36);
 final grayColor = const Color(0xFF939393);
 
 enum AuthFormType { signIn, signUp, reset, anonymous, convert }
@@ -89,7 +89,7 @@ class _SignUpViewState extends State<SignUpView> {
             });
             break;
           case AuthFormType.anonymous:
-            // await auth.signInAnonymously();
+            await auth.signInAnonymously();
             // Navigator.of(context).pushReplacementNamed("/home");
             Navigator.of(context).pushReplacementNamed("/signUp");
             break;
@@ -219,6 +219,7 @@ class _SignUpViewState extends State<SignUpView> {
 
     if (authFormType == AuthFormType.reset) {
       textFields.add(TextFormField(
+        enabled: false,
         style: TextStyle(fontSize: 22),
         validator: EmailValidator.validate,
         decoration: buildSignUpInputDecoration("Email"),
@@ -235,6 +236,7 @@ class _SignUpViewState extends State<SignUpView> {
 // add name if user in sign up
     if ([AuthFormType.signUp, AuthFormType.convert].contains(authFormType)) {
       textFields.add(TextFormField(
+        enabled: false,
         style: TextStyle(fontSize: 22),
         validator: NameValidator.validate,
         decoration: buildSignUpInputDecoration("Full name"),
@@ -248,6 +250,7 @@ class _SignUpViewState extends State<SignUpView> {
 //add email and password
     textFields.add(
       TextFormField(
+        enabled: false,
         style: TextStyle(fontSize: 22),
         validator: EmailValidator.validate,
         decoration: buildSignUpInputDecoration("Email"),
@@ -260,6 +263,7 @@ class _SignUpViewState extends State<SignUpView> {
     ));
     textFields.add(
       TextFormField(
+        enabled: false,
         style: TextStyle(fontSize: 22),
         obscureText: true,
         validator: PasswordValidator.validate,
