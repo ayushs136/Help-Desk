@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:helpdesk_2/screens/authentication/auth_services.dart';
 import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 
-final primaryColor = const Color(0xFF75A2EA);
+final primaryColor = const Color(0xff232d36);
 final grayColor = const Color(0xFF939393);
 
 enum AuthFormType { signIn, signUp, reset, anonymous, convert }
@@ -22,6 +23,7 @@ class SignUpView extends StatefulWidget {
 
 class _SignUpViewState extends State<SignUpView> {
   AuthFormType authFormType;
+  bool isLoginPressed = true;
   _SignUpViewState({this.authFormType});
 
   final formKey = GlobalKey<FormState>();
@@ -65,7 +67,7 @@ class _SignUpViewState extends State<SignUpView> {
     if (validate()) {
       print("submit function");
       try {
-        final auth = Provider.of(context).auth;
+        final auth = ProviderWidget.of(context).auth;
         switch (authFormType) {
           case AuthFormType.signIn:
             String uid =
@@ -89,7 +91,7 @@ class _SignUpViewState extends State<SignUpView> {
             });
             break;
           case AuthFormType.anonymous:
-            // await auth.signInAnonymously();
+            await auth.signInAnonymously();
             // Navigator.of(context).pushReplacementNamed("/home");
             Navigator.of(context).pushReplacementNamed("/signUp");
             break;
@@ -140,21 +142,23 @@ class _SignUpViewState extends State<SignUpView> {
           color: primaryColor,
           height: _height,
           width: _width,
-          child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: _height * 0.05),
-                showAlert(),
-                SizedBox(height: _height * 0.05),
-                buildHeader(),
-                SizedBox(height: _height * 0.05),
-                Form(
-                  key: formKey,
-                  child: Column(
-                    children: buildInputs() + buildButtons(),
+          child: SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: _height * 0.05),
+                  showAlert(),
+                  SizedBox(height: _height * 0.05),
+                  buildHeader(),
+                  SizedBox(height: _height * 0.05),
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: buildInputs() + buildButtons(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ));
@@ -219,6 +223,7 @@ class _SignUpViewState extends State<SignUpView> {
 
     if (authFormType == AuthFormType.reset) {
       textFields.add(TextFormField(
+        enabled: false,
         style: TextStyle(fontSize: 22),
         validator: EmailValidator.validate,
         decoration: buildSignUpInputDecoration("Email"),
@@ -235,6 +240,7 @@ class _SignUpViewState extends State<SignUpView> {
 // add name if user in sign up
     if ([AuthFormType.signUp, AuthFormType.convert].contains(authFormType)) {
       textFields.add(TextFormField(
+        enabled: false,
         style: TextStyle(fontSize: 22),
         validator: NameValidator.validate,
         decoration: buildSignUpInputDecoration("Full name"),
@@ -248,6 +254,7 @@ class _SignUpViewState extends State<SignUpView> {
 //add email and password
     textFields.add(
       TextFormField(
+        enabled: false,
         style: TextStyle(fontSize: 22),
         validator: EmailValidator.validate,
         decoration: buildSignUpInputDecoration("Email"),
@@ -260,6 +267,7 @@ class _SignUpViewState extends State<SignUpView> {
     ));
     textFields.add(
       TextFormField(
+        enabled: false,
         style: TextStyle(fontSize: 22),
         obscureText: true,
         validator: PasswordValidator.validate,
@@ -362,7 +370,7 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   Widget buildSocialIcons(bool visible) {
-    final _auth = Provider.of(context).auth;
+    final _auth = ProviderWidget.of(context).auth;
     return Visibility(
       child: Column(
         children: <Widget>[
@@ -370,23 +378,39 @@ class _SignUpViewState extends State<SignUpView> {
             color: Colors.white,
           ),
           SizedBox(height: 10),
-          GoogleSignInButton(
-            darkMode: true,
-            onPressed: () async {
-              try {
-                if (authFormType == AuthFormType.convert) {
-                  _auth.convertWithGoogle();
-                  Navigator.of(context).pop();
-                } else {
-                  await _auth.signInWithGoogle();
-                  Navigator.of(context).pushReplacementNamed("/home");
-                }
-              } catch (e) {
-                _warning = e.message;
-                print(e);
-              }
-            },
-          ),
+          isLoginPressed
+              ? GoogleSignInButton(
+                  darkMode: true,
+                  onPressed: () async {
+                    setState(() {
+                      isLoginPressed = false;
+                    });
+                    try {
+                      if (authFormType == AuthFormType.convert) {
+                        _auth.convertWithGoogle();
+                        Navigator.of(context).pop();
+                      } else {
+                        await _auth
+                            .signInWithGoogle()
+                            .then((FirebaseUser user) {
+                          if (user != null) {
+                            _auth.addDataToDb(user);
+                          } else {
+                            print("error in login");
+                          }
+                        });
+
+                        Navigator.of(context).pushReplacementNamed("/home");
+
+                        // _auth.addDataToDb();
+                      }
+                    } catch (e) {
+                      _warning = e.message;
+                      print(e);
+                    }
+                  },
+                )
+              : CircularProgressIndicator(),
         ],
       ),
       visible: visible,

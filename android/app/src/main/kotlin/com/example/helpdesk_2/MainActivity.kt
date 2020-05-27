@@ -1,4 +1,4 @@
-package com.example.helpdesk_2
+package com.clintonfredo.helpdesk2
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
