@@ -1,7 +1,7 @@
 
 # HELP - DESK 
 
-An mobile application to find someone who can help wherever you need!
+A mobile application to find someone who can help wherever you need!
 from learning something to completing any task,
 you can find the person who can help you.
 
