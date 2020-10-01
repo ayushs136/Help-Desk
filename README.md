@@ -19,3 +19,5 @@ apart from that a great life experience!
 * Open terminal in VS Code
 * Run Command "flutter doctor" to check everthing is installed
 * Run Command " flutter run" to run the app in an emulator or android device
+
+Thank You!
