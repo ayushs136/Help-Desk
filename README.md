@@ -11,7 +11,9 @@ apart from that a great life experience!
 
 
 # [Screenshots](https://drive.google.com/open?id=1sMFtas0f8ryvehbrEexLHM9MpDNHZ7Yo)
-[img](https://drive.google.com/file/d/1TIL9fJSl56WlGYkKS_oO2WWEV-qogLYV/view?usp=sharing)
+[img 1](https://drive.google.com/file/d/1TIL9fJSl56WlGYkKS_oO2WWEV-qogLYV/view?usp=sharing)
+[img 2](https://drive.google.com/file/d/1RtDSsPQpXbRZzN1_cGdYSL2ssOcZKNSz/view?usp=sharing)
+
 # How to Run in an emulator or Android device
 
 * Install Flutter and dart SDK
