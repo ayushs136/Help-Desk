@@ -14,7 +14,7 @@ apart from that a great life experience!
 [img 1](https://drive.google.com/file/d/1TIL9fJSl56WlGYkKS_oO2WWEV-qogLYV/view?usp=sharing)
 [img 2](https://drive.google.com/file/d/1RtDSsPQpXbRZzN1_cGdYSL2ssOcZKNSz/view?usp=sharing)
 [img 3](https://drive.google.com/file/d/10JWA8hizdJopExmPiR02-TbzTpUeqwMk/view?usp=sharing)
-[img 4](https://drive.google.com/file/d/162ezCr4NZcE8Ny4Nh7Agi4585dGPPf1y/view?usp=sharing)
+
 
 # How to Run in an emulator or Android device
 
