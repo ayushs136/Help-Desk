@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:helpdesk_2/Screens/authentication/provider_widget.dart';
 import 'package:helpdesk_2/core/enum/user_state.dart';
-import 'package:helpdesk_2/data/service/auth_services.dart';
+import 'package:helpdesk_2/data/service/auth_service.dart';
 import 'package:helpdesk_2/provider/user_provider.dart';
 import 'package:helpdesk_2/screens/home/chat_screens/chat_list_screen.dart';
 import 'package:helpdesk_2/screens/home/helper_list_screen.dart';
@@ -30,7 +30,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   // }
 
   int _currentIndex = 0;
-  final AuthServices _authServices = AuthServices();
+  final AuthService _authServices = AuthService();
   UserProvider userProvider;
 
   final List<Widget> _children = [HelpersNearBy(), ChatListScreen(), UserProfile()];
@@ -126,7 +126,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             ),
             onPressed: () async {
               try {
-                AuthServices auth = ProviderWidget.of(context).auth;
+                AuthService auth = ProviderWidget.of(context).auth;
                 await auth.signOut();
                 print("Signed out");
               } catch (e) {
@@ -148,23 +148,17 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(backgroundColor: Color(0xff232d36), currentIndex: _currentIndex, onTap: onTabTapped, items: [
         BottomNavigationBarItem(
-            icon: new Icon(Icons.people),
-            title: new Text(
-              "Helpers",
-              style: TextStyle(color: Colors.white),
-            )),
+          icon: new Icon(Icons.people),
+          label: "Helpers",
+        ),
         BottomNavigationBarItem(
-            icon: new Icon(Icons.chat),
-            title: new Text(
-              "Chats",
-              style: TextStyle(color: Colors.white),
-            )),
+          icon: new Icon(Icons.chat),
+          label: "Chats",
+        ),
         BottomNavigationBarItem(
-            icon: new Icon(Icons.person),
-            title: new Text(
-              "Profile",
-              style: TextStyle(color: Colors.white),
-            )),
+          icon: new Icon(Icons.person),
+          label: "Profile",
+        ),
       ]),
     );
   }

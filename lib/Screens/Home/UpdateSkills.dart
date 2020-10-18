@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:helpdesk_2/Screens/authentication/provider_widget.dart';
-import 'package:helpdesk_2/core/utils/constants.dart';
+import 'package:helpdesk_2/core/common/utils.dart';
 import 'package:helpdesk_2/data/db/models/helper.dart';
 import 'package:helpdesk_2/data/db/models/skills.dart';
-import 'package:provider/provider.dart';
 
 class UpdateSkills extends StatefulWidget {
   final Helper helper;

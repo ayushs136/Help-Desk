@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'Screens/authentication/provider_widget.dart';
 import 'core/widget/loading.dart';
-import 'data/service/auth_services.dart';
+import 'data/service/auth_service.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderWidget(
-      auth: AuthServices(),
+      auth: AuthService(),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider<ImageUploadProvider>(
@@ -47,13 +47,13 @@ class MyApp extends StatelessWidget {
 class HomeController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AuthServices auth = ProviderWidget.of(context).auth;
+    final AuthService auth = ProviderWidget.of(context).auth;
     return StreamBuilder(
         stream: auth.onAuthStateChange,
         builder: (context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             final bool signedIn = snapshot.hasData;
-            return signedIn ? Home() : OnBoarding();
+            return !signedIn ? Home() : OnBoarding();
           }
           return Loading();
         });

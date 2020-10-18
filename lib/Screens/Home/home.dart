@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_2/data/db/models/helper.dart';
-import 'package:helpdesk_2/data/service/auth_service.dart';
+import 'package:helpdesk_2/data/service/profile_service.dart';
 import 'package:helpdesk_2/Screens/Home/helper_list.dart';
 import 'package:helpdesk_2/Screens/Home/search.dart';
 import 'package:helpdesk_2/Screens/Home/side_drawer.dart';
@@ -15,7 +15,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Helper>>.value(
-        value: DatabaseServices().userDetails,
+        value: ProfileService().userDetails,
         child: Scaffold(
           drawer: SideBarMenu(),
           appBar: AppBar(
@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
             actions: <Widget>[
               FlatButton.icon(
                   onPressed: () {
-                    dynamic results = AuthService().signOut();
+                    dynamic results = ProfileService().signOut();
                     print("SignOut Button pressed " + results);
                   },
                   label: Text("Logout"),

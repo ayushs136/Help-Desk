@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_2/data/db/models/contact.dart';
 import 'package:helpdesk_2/data/db/models/helper.dart';
-import 'package:helpdesk_2/data/service/auth_services.dart';
+import 'package:helpdesk_2/data/service/auth_service.dart';
 import 'package:helpdesk_2/data/service/chat_service.dart';
 import 'package:helpdesk_2/provider/user_provider.dart';
 import 'package:helpdesk_2/screens/home/chat_screens/chat_screens.dart';
@@ -17,7 +17,7 @@ class ContactView extends StatelessWidget {
 
   ContactView(this.contact);
 
-  final AuthServices _auth = AuthServices();
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {

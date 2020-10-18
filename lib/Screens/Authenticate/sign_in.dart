@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:helpdesk_2/core/widget/loading.dart';
-import 'package:helpdesk_2/data/service/auth_service.dart';
+import 'package:helpdesk_2/data/service/profile_service.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -9,7 +9,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  final AuthService _auth = AuthService();
+  final ProfileService _auth = ProfileService();
   bool loading = false;
 
   @override

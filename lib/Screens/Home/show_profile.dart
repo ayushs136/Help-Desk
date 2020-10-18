@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/data/service/auth_service.dart';
-
-
-
-
+import 'package:helpdesk_2/data/service/profile_service.dart';
 
 class UserProfile extends StatefulWidget {
   @override
@@ -11,30 +7,25 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfile> {
-  
   Map<String, dynamic> _profile;
-
 
   @override
   void initState() {
     super.initState();
 
-
-   authService.profile.listen((state) => setState(() => _profile = state));
-    
+    ProfileService().profile.listen((state) => setState(() => _profile = state));
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xff133041),
-        appBar: AppBar(
-            title: Text("Profile"),
-            backgroundColor: Colors.grey[800],
-            elevation: 5.0,
-            
-        ),
-            body: Padding(
+      backgroundColor: Color(0xff133041),
+      appBar: AppBar(
+        title: Text("Profile"),
+        backgroundColor: Colors.grey[800],
+        elevation: 5.0,
+      ),
+      body: Padding(
         padding: const EdgeInsets.fromLTRB(30.0, 40.0, 30.0, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +33,9 @@ class _UserProfileState extends State<UserProfile> {
             Center(
               child: CircleAvatar(
                 radius: 40.0,
-                backgroundImage: NetworkImage('gs://login-test-flutter-b5943.appspot.com/A.jpg',),
+                backgroundImage: NetworkImage(
+                  'gs://login-test-flutter-b5943.appspot.com/A.jpg',
+                ),
               ),
             ),
             Divider(
@@ -58,9 +51,7 @@ class _UserProfileState extends State<UserProfile> {
             ),
             SizedBox(height: 10.0),
             Text(
-                  '_profile',
-
-              
+              '_profile',
               style: TextStyle(
                 color: Colors.amberAccent[200],
                 fontWeight: FontWeight.bold,
@@ -78,7 +69,7 @@ class _UserProfileState extends State<UserProfile> {
             ),
             SizedBox(height: 10.0),
             Text(
-                  // '${userData.lastSeen}',
+              // '${userData.lastSeen}',
 
               'Beijing, China',
               style: TextStyle(
@@ -98,7 +89,7 @@ class _UserProfileState extends State<UserProfile> {
             ),
             SizedBox(height: 10.0),
             Text(
-                  // '${userData.uid}',
+              // '${userData.uid}',
 
               '8',
               style: TextStyle(
@@ -130,7 +121,6 @@ class _UserProfileState extends State<UserProfile> {
           ],
         ),
       ),
-            
-            );
+    );
   }
 }
