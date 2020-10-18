@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
+import 'package:helpdesk_2/data/service/auth_service.dart';
 
 class ProviderWidget extends InheritedWidget {
-  final AuthServices auth;
+  final AuthService auth;
   ProviderWidget({Key key, Widget child, this.auth}) : super(key: key, child: child);
 
   @override

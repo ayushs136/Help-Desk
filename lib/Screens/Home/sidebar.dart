@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/screens/home/navigation_view.dart';
 import 'package:helpdesk_2/screens/home/search.dart';
 import 'package:helpdesk_2/screens/home/user_profile.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import 'onboardingfirst_page.dart';
 
 class SideBarMenu extends StatelessWidget {
   @override
@@ -47,7 +48,7 @@ class SideBarMenu extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => OnBoarding()),
               );
             },
           ),

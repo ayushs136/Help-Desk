@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_2/Screens/authentication/provider_widget.dart';
+import 'package:helpdesk_2/core/common/validator.dart';
+import 'package:helpdesk_2/data/service/auth_service.dart';
 
 final primaryColor = const Color(0xff232d36);
 final grayColor = const Color(0xFF939393);

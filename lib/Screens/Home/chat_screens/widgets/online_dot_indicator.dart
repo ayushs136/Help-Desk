@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/enum/user_state.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
+import 'package:helpdesk_2/core/enum/user_state.dart';
+import 'package:helpdesk_2/data/db/models/helper.dart';
+import 'package:helpdesk_2/data/service/auth_service.dart';
 
 class OnlineDotIndicator extends StatelessWidget {
   final String uid;
-  final AuthServices _authServices = AuthServices();
+  final AuthService _authServices = AuthService();
 
   OnlineDotIndicator({
     @required this.uid,

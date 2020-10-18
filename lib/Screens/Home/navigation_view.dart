@@ -1,16 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:helpdesk_2/enum/user_state.dart';
+import 'package:helpdesk_2/Screens/authentication/provider_widget.dart';
+import 'package:helpdesk_2/core/enum/user_state.dart';
+import 'package:helpdesk_2/data/service/auth_service.dart';
 import 'package:helpdesk_2/provider/user_provider.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 import 'package:helpdesk_2/screens/home/chat_screens/chat_list_screen.dart';
-
 import 'package:helpdesk_2/screens/home/helper_list_screen.dart';
 import 'package:helpdesk_2/screens/home/search.dart';
 import 'package:helpdesk_2/screens/home/sidebar.dart';
-
 import 'package:helpdesk_2/screens/home/user_profile.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +17,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with WidgetsBindingObserver{
+class _HomeState extends State<Home> with WidgetsBindingObserver {
   // bool _showIcon = false;
 
   // bool visible() {
@@ -32,32 +30,28 @@ class _HomeState extends State<Home> with WidgetsBindingObserver{
   // }
 
   int _currentIndex = 0;
-  final AuthServices _authServices = AuthServices();
+  final AuthService _authServices = AuthService();
   UserProvider userProvider;
 
+  final List<Widget> _children = [HelpersNearBy(), ChatListScreen(), UserProfile()];
 
-  final List<Widget> _children = [HelpersNearBy(), ChatListScreen(), UserProfile() ];
-
-
- @override
-  void initState()
- {
-      super.initState();
-   SchedulerBinding.instance.addPostFrameCallback((_) async {
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       userProvider = Provider.of<UserProvider>(context, listen: false);
       await userProvider.refreshUser();
 
       _authServices.setUserState(
         userId: userProvider.getHelper.uid,
-        userState: UserState.Online, 
+        userState: UserState.Online,
       );
     });
 
     WidgetsBinding.instance.addObserver(this);
-}
+  }
 
-
- @override
+  @override
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
@@ -65,46 +59,25 @@ class _HomeState extends State<Home> with WidgetsBindingObserver{
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    String currentUserId =
-        (userProvider != null && userProvider.getHelper != null)
-            ? userProvider.getHelper.uid
-            : "";
-  
-super.didChangeAppLifecycleState(state);
+    String currentUserId = (userProvider != null && userProvider.getHelper != null) ? userProvider.getHelper.uid : "";
+
+    super.didChangeAppLifecycleState(state);
 
     switch (state) {
       case AppLifecycleState.resumed:
-        currentUserId != null
-            ? _authServices.setUserState(
-                userId: currentUserId, userState: UserState.Online)
-            : print("resume state");
+        currentUserId != null ? _authServices.setUserState(userId: currentUserId, userState: UserState.Online) : print("resume state");
         break;
       case AppLifecycleState.inactive:
-        currentUserId != null
-            ? _authServices.setUserState(
-                userId: currentUserId, userState: UserState.Offline)
-            : print("inactive state");
+        currentUserId != null ? _authServices.setUserState(userId: currentUserId, userState: UserState.Offline) : print("inactive state");
         break;
       case AppLifecycleState.paused:
-        currentUserId != null
-            ? _authServices.setUserState(
-                userId: currentUserId, userState: UserState.Waiting)
-            : print("paused state");
+        currentUserId != null ? _authServices.setUserState(userId: currentUserId, userState: UserState.Waiting) : print("paused state");
         break;
       case AppLifecycleState.detached:
-        currentUserId != null
-            ? _authServices.setUserState(
-                userId: currentUserId, userState: UserState.Offline)
-            : print("detached state");
+        currentUserId != null ? _authServices.setUserState(userId: currentUserId, userState: UserState.Offline) : print("detached state");
         break;
     }
   }
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -135,8 +108,7 @@ super.didChangeAppLifecycleState(state);
         elevation: 10,
         onPressed: () {
           print("Search pressed");
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => SearchScreen()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SearchScreen()));
         },
       ),
       backgroundColor: Colors.black,
@@ -144,8 +116,7 @@ super.didChangeAppLifecycleState(state);
         backgroundColor: Color(0xff232d36),
         title: Text("Helpers Desk View"),
         elevation: 30,
-        actionsIconTheme:
-            IconThemeData(color: Colors.white, opacity: 10, size: 90),
+        actionsIconTheme: IconThemeData(color: Colors.white, opacity: 10, size: 90),
         actions: <Widget>[
           FlatButton(
             child: Icon(
@@ -155,7 +126,7 @@ super.didChangeAppLifecycleState(state);
             ),
             onPressed: () async {
               try {
-                AuthServices auth = ProviderWidget.of(context).auth;
+                AuthService auth = ProviderWidget.of(context).auth;
                 await auth.signOut();
                 print("Signed out");
               } catch (e) {
@@ -175,31 +146,20 @@ super.didChangeAppLifecycleState(state);
         ],
       ),
       body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Color(0xff232d36),
-          currentIndex: _currentIndex,
-          onTap: onTabTapped,
-          items: [
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.people),
-                title: new Text(
-                  "Helpers",
-                  style: TextStyle(color: Colors.white),
-                )),
-                   BottomNavigationBarItem(
-                icon: new Icon(Icons.chat),
-                title: new Text(
-                  "Chats",
-                  style: TextStyle(color: Colors.white),
-                )),
-            BottomNavigationBarItem(
-                icon: new Icon(Icons.person),
-                title: new Text(
-                  "Profile",
-                  style: TextStyle(color: Colors.white),
-                )),
-         
-          ]),
+      bottomNavigationBar: BottomNavigationBar(backgroundColor: Color(0xff232d36), currentIndex: _currentIndex, onTap: onTabTapped, items: [
+        BottomNavigationBarItem(
+          icon: new Icon(Icons.people),
+          label: "Helpers",
+        ),
+        BottomNavigationBarItem(
+          icon: new Icon(Icons.chat),
+          label: "Chats",
+        ),
+        BottomNavigationBarItem(
+          icon: new Icon(Icons.person),
+          label: "Profile",
+        ),
+      ]),
     );
   }
 

@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
-// import 'package:helpdesk_2/models/customer.dart';
+// import 'package:helpdesk_2/data/models/customer.dart';
 // import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 // import 'package:helpdesk_2/services/database.dart';
 // import 'dart:async';

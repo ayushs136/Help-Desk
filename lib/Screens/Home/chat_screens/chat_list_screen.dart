@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/contact.dart';
+import 'package:helpdesk_2/data/db/models/contact.dart';
 import 'package:helpdesk_2/provider/user_provider.dart';
-import 'package:helpdesk_2/resources/chat_methods.dart';
+import 'package:helpdesk_2/data/service/chat_service.dart';
 import 'package:helpdesk_2/screens/home/chat_screens/widgets/contact_view.dart';
 import 'package:helpdesk_2/screens/home/chat_screens/widgets/new_chat_button.dart';
-
-import 'package:helpdesk_2/services/customTile.dart';
 import 'package:provider/provider.dart';
 
 import 'quite_box.dart';
@@ -24,7 +22,7 @@ class ChatListScreen extends StatelessWidget {
 }
 
 class ChatListContainer extends StatelessWidget {
-  final ChatMethods _chatMethods = ChatMethods();
+  final ChatService _chatMethods = ChatService();
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +48,8 @@ class ChatListContainer extends StatelessWidget {
                   },
                 );
               }
-
-              return Center(child: CircularProgressIndicator(),);
             }
+            return Center(child: CircularProgressIndicator());
           }),
     );
   }

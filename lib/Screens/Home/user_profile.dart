@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/models/skills.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_2/Screens/authentication/provider_widget.dart';
+import 'package:helpdesk_2/data/db/models/helper.dart';
+import 'package:helpdesk_2/data/db/models/skills.dart';
 import 'package:helpdesk_2/screens/home/UpdateSkills.dart';
 
 class UserProfile extends StatefulWidget {
   final Helper helper;
+
   UserProfile({this.helper});
 
   @override
@@ -22,8 +23,7 @@ class _UserProfileState extends State<UserProfile> {
     Future<Helper> getHelperData(BuildContext context) async {
       // Helper Helper = Helper();
       final uid = await ProviderWidget.of(context).auth.getCurrentUID();
-      DocumentSnapshot userData =
-          await Firestore.instance.collection('userData').document(uid).get();
+      DocumentSnapshot userData = await Firestore.instance.collection('userData').document(uid).get();
       print(userData.data['name']);
       // Helper.fr
 
@@ -36,9 +36,7 @@ class _UserProfileState extends State<UserProfile> {
         if (snapshot.hasData) {
           return Scaffold(
             floatingActionButton: RaisedButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.black)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0), side: BorderSide(color: Colors.black)),
               color: Colors.teal,
               child: Icon(Icons.edit),
               onPressed: () {
@@ -51,8 +49,7 @@ class _UserProfileState extends State<UserProfile> {
                             )));
               },
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             backgroundColor: Color(0xff000000),
             appBar: AppBar(
               centerTitle: true,
@@ -132,13 +129,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      snapshot.data.skills[0] +
-                          "\n" +
-                          snapshot.data.skills[1] +
-                          "\n" +
-                          snapshot.data.skills[2] +
-                          "\n" +
-                          snapshot.data.skills[3],
+                      snapshot.data.skills[0] + "\n" + snapshot.data.skills[1] + "\n" + snapshot.data.skills[2] + "\n" + snapshot.data.skills[3],
 
                       // '8',
                       style: TextStyle(
@@ -192,8 +183,7 @@ class _UserProfileState extends State<UserProfile> {
             ),
           );
         } else {
-          return Container(
-              alignment: Alignment.center, child: CircularProgressIndicator());
+          return Container(alignment: Alignment.center, child: CircularProgressIndicator());
         }
       },
     );
@@ -205,9 +195,6 @@ class _UserProfileState extends State<UserProfile> {
     data['isAvailable'] = isAvailable;
 
     final uid = await ProviderWidget.of(context).auth.getCurrentUID();
-    await Firestore.instance
-        .collection('userData')
-        .document(uid)
-        .setData(data, merge: true);
+    await Firestore.instance.collection('userData').document(uid).setData(data, merge: true);
   }
 }

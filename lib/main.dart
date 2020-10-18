@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_2/provider/image_upload_provider.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 import 'package:helpdesk_2/screens/authentication/sign_up.dart';
 import 'package:helpdesk_2/screens/home/navigation_view.dart';
 import 'package:helpdesk_2/screens/home/onboardingfirst_page.dart';
-import 'package:helpdesk_2/shared/loading.dart';
 import 'package:provider/provider.dart';
+
+import 'Screens/authentication/provider_widget.dart';
+import 'core/widget/loading.dart';
+import 'data/service/auth_service.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderWidget(
-      auth: AuthServices(),
+      auth: AuthService(),
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider<ImageUploadProvider>(
@@ -29,16 +30,13 @@ class MyApp extends StatelessWidget {
           ),
           home: HomeController(),
           routes: <String, WidgetBuilder>{
-            "/signUp": (BuildContext context) =>
-                SignUpView(authFormType: AuthFormType.signUp),
-            "/signIn": (BuildContext context) =>
-                SignUpView(authFormType: AuthFormType.signIn),
+            "/signUp": (BuildContext context) => SignUpView(authFormType: AuthFormType.signUp),
+            "/signIn": (BuildContext context) => SignUpView(authFormType: AuthFormType.signIn),
             "/home": (BuildContext context) => HomeController(),
             "/anonymousSignIn": (BuildContext context) => SignUpView(
                   authFormType: AuthFormType.anonymous,
                 ),
-            "/convertUser": (BuildContext context) =>
-                SignUpView(authFormType: AuthFormType.convert),
+            "/convertUser": (BuildContext context) => SignUpView(authFormType: AuthFormType.convert),
           },
         ),
       ),
@@ -49,7 +47,7 @@ class MyApp extends StatelessWidget {
 class HomeController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AuthServices auth = ProviderWidget.of(context).auth;
+    final AuthService auth = ProviderWidget.of(context).auth;
     return StreamBuilder(
         stream: auth.onAuthStateChange,
         builder: (context, AsyncSnapshot<String> snapshot) {

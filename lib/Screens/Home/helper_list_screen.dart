@@ -2,11 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_2/data/db/models/helper.dart';
 
 import 'package:helpdesk_2/screens/home/helpers_profile.dart';
-import 'package:helpdesk_2/screens/home/user_profile.dart';
 
 // import 'package:intl/intl.dart';
 
@@ -21,47 +19,36 @@ class HelpersNearBy extends StatefulWidget {
 
 class _HelpersNearByState extends State<HelpersNearBy> {
   List<Helper> helperList;
-  String urlTemp =
-      "https://www.clipartmax.com/png/middle/271-2719453_korea-circle-person-icon-png.png";
+  String urlTemp = "https://www.clipartmax.com/png/middle/271-2719453_korea-circle-person-icon-png.png";
+
   @override
   Widget build(BuildContext context) {
     return Container(
         child: StreamBuilder(
             stream: getHelperDataStreamSnapshot(context),
             builder: (context, snapshot) {
-              if (!snapshot.hasData)
-                return Container(
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator());
+              if (!snapshot.hasData) return Container(alignment: Alignment.center, child: CircularProgressIndicator());
               return ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return buildHelperCard(
-                      context, snapshot.data.documents[index]);
+                  return buildHelperCard(context, snapshot.data.documents[index]);
                 },
               );
             }));
   }
 
-  Stream<QuerySnapshot> getHelperDataStreamSnapshot(
-      BuildContext context) async* {
+  Stream<QuerySnapshot> getHelperDataStreamSnapshot(BuildContext context) async* {
     // final uid = await Provider.of(context).auth.getCurrentUID();
-    yield* Firestore.instance
-        .collection("userData")
-        .where("isAvailable", isEqualTo: true)
-        .orderBy("name")
-        .snapshots();
+    yield* Firestore.instance.collection("userData").where("isAvailable", isEqualTo: true).orderBy("name").snapshots();
   }
 
   Future<List<Helper>> fetchAllUsers(FirebaseUser currentUser) async {
-    QuerySnapshot querySnapshot =
-        await Firestore.instance.collection("userData").getDocuments();
+    QuerySnapshot querySnapshot = await Firestore.instance.collection("userData").getDocuments();
 
     List<Helper> helperList = List<Helper>();
 
     for (var i = 0; i < querySnapshot.documents.length; i++) {
-      if (querySnapshot.documents[i].documentID != currentUser.uid &&
-          querySnapshot.documents[i].data['isAvailable'] == true) {
+      if (querySnapshot.documents[i].documentID != currentUser.uid && querySnapshot.documents[i].data['isAvailable'] == true) {
         helperList.add(Helper.fromMap(querySnapshot.documents[i].data));
       }
     }
@@ -101,8 +88,7 @@ class _HelpersNearByState extends State<HelpersNearBy> {
   //         skills: helperList[index].skills);
 
   //     return
-  Widget buildHelperCard(
-      BuildContext context, DocumentSnapshot helperDocument) {
+  Widget buildHelperCard(BuildContext context, DocumentSnapshot helperDocument) {
     createDialogAlert(BuildContext context) {
       return showDialog(
           context: context,
@@ -110,16 +96,13 @@ class _HelpersNearByState extends State<HelpersNearBy> {
           builder: (context) {
             return AlertDialog(
               title: Text("Contact Details"),
-              content: Text(
-                  "${(helperDocument['email'] == null) ? 'N/A' : helperDocument['email']}"),
+              content: Text("${(helperDocument['email'] == null) ? 'N/A' : helperDocument['email']}"),
               elevation: 5.0,
               actions: <Widget>[
                 FlatButton.icon(
                     onPressed: () {
                       print("Clipboard button pressed");
-                      Clipboard.setData(ClipboardData(
-                          text:
-                              "${(helperDocument['email'] == null) ? 'N/A' : helperDocument['email']}"));
+                      Clipboard.setData(ClipboardData(text: "${(helperDocument['email'] == null) ? 'N/A' : helperDocument['email']}"));
                       Navigator.of(context).pop();
                     },
                     icon: Icon(Icons.content_copy),
@@ -153,8 +136,7 @@ class _HelpersNearByState extends State<HelpersNearBy> {
           // } else {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => Scaffold(
-                    body: HelperProfile(
-                        helper: Helper.fromMap(helperDocument.data)),
+                    body: HelperProfile(helper: Helper.fromMap(helperDocument.data)),
                   )));
           // }
         },
@@ -169,18 +151,14 @@ class _HelpersNearByState extends State<HelpersNearBy> {
                   // children: <Widget>[
                   leading: CircleAvatar(
                     backgroundColor: Colors.white,
-                    backgroundImage: NetworkImage(
-                        "${(helperDocument['photoURL'] == null) ? urlTemp : helperDocument['photoURL']}",
+                    backgroundImage: NetworkImage("${(helperDocument['photoURL'] == null) ? urlTemp : helperDocument['photoURL']}",
                         // "${Helper['photoURL']}",
                         scale: 0.2),
                     maxRadius: 20,
                   ),
                   title: Text(
                     "${(helperDocument['name'] == null) ? 'N/A' : helperDocument['name'].toString().toUpperCase()}",
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
                   ),
 
                   trailing: FlatButton(
@@ -188,8 +166,7 @@ class _HelpersNearByState extends State<HelpersNearBy> {
                         createDialogAlert(context).then((onValue) {
                           SnackBar mySnackBar = SnackBar(
                               duration: Duration(seconds: 1),
-                              content: Text(
-                                  "${(helperDocument['email'] == null) ? 'N/A' : helperDocument['email']} copied to clipboard! "));
+                              content: Text("${(helperDocument['email'] == null) ? 'N/A' : helperDocument['email']} copied to clipboard! "));
                           Scaffold.of(context).showSnackBar(mySnackBar);
                         });
                         print("Pressed contact button ");
@@ -198,10 +175,7 @@ class _HelpersNearByState extends State<HelpersNearBy> {
 
                   subtitle: Text(
                     "${(helperDocument['skills'] == null) ? 'N/A' : (helperDocument['skills'][0]) + '\n' + helperDocument['skills'][1] + '\n' + helperDocument['skills'][2] + '\n' + helperDocument['skills'][3]}",
-                    style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.amber,
-                        fontWeight: FontWeight.w300),
+                    style: TextStyle(fontSize: 13, color: Colors.amber, fontWeight: FontWeight.w300),
                   ),
 
                   // ],

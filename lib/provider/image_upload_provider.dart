@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:helpdesk_2/enum/view_state.dart';
+import 'package:helpdesk_2/core/enum/view_state.dart';
 
 class ImageUploadProvider with ChangeNotifier {
   ViewState _viewState = ViewState.IDLE;

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:helpdesk_2/Screens/authentication/provider_widget.dart';
 import 'package:helpdesk_2/screens/authentication/google_login.dart';
 import 'package:helpdesk_2/screens/home/custom_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:helpdesk_2/main.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 
 class OnBoarding extends StatefulWidget {
   @override
@@ -68,19 +68,19 @@ class _OnBoardingState extends State<OnBoarding> {
                       ),
                     ),
                     onPressed: () {
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (BuildContext context) {
-                      //       return CustomDialog(
-                      //         title: "Would you like to create a free account?",
-                      //         description:
-                      //             "with an account, your data will be securely saved, allowing us to know you better!",
-                      //         primaryButtonText: "Create my Account",
-                      //         primaryButtonRoute: "/signUp",
-                      //         secondaryButtonRoute: "/anonymousSignIn",
-                      //         secondaryButtonText: "Maybe Later",
-                      //       );
-                      //     });
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialog(
+                              title: "Would you like to create a free account?",
+                              description:
+                                  "with an account, your data will be securely saved, allowing us to know you better!",
+                              primaryButtonText: "Create my Account",
+                              primaryButtonRoute: "/signUp",
+                              secondaryButtonText: "Maybe Later",
+                              secondaryButtonRoute: "/anonymousSignIn",
+                            );
+                          });
                     },
                   ),
                   SizedBox(

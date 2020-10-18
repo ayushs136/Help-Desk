@@ -4,21 +4,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/enum/view_state.dart';
+import 'package:helpdesk_2/Screens/Home/chat_screens/widgets/cached_image.dart';
+import 'package:helpdesk_2/core/common/image_utils.dart';
+import 'package:helpdesk_2/core/enum/view_state.dart';
+import 'package:helpdesk_2/core/widget/appbar.dart';
+import 'package:helpdesk_2/data/db/models/message.dart';
 import 'package:helpdesk_2/main.dart';
 
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/models/message.dart';
+import 'package:helpdesk_2/data/db/models/helper.dart';
 import 'package:helpdesk_2/provider/image_upload_provider.dart';
-import 'package:helpdesk_2/resources/chat_methods.dart';
-
-import 'package:helpdesk_2/screens/home/chat_screens/widgets/cached_image.dart';
-import 'package:helpdesk_2/services/appbar.dart';
-import 'package:helpdesk_2/services/customTile.dart';
-import 'package:helpdesk_2/services/pickImage.dart';
+import 'package:helpdesk_2/data/service/chat_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../custom_tile.dart';
 
 class ChatScreen extends StatefulWidget {
   final Helper receiver;
@@ -31,7 +31,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController textFieldController = TextEditingController();
-  ChatMethods _chatMethods = ChatMethods();
+  ChatService _chatMethods = ChatService();
   ScrollController _listScrollController = ScrollController();
   Helper sender;
   StorageReference _storageReference;
@@ -39,13 +39,12 @@ class _ChatScreenState extends State<ChatScreen> {
   String _currentUserId;
   ImageUploadProvider _imageUploadProvider;
   bool isWriting = false;
+
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser currentUser;
     currentUser = await FirebaseAuth.instance.currentUser();
     return currentUser;
   }
-
-
 
   @override
   void initState() {
@@ -67,6 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   showKeyboard() => textFieldFocus.requestFocus();
+
   hideKeyboard() => textFieldFocus.unfocus();
 
   @override
@@ -103,12 +103,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget messageList() {
     return StreamBuilder(
-      stream: Firestore.instance
-          .collection("chats")
-          .document(_currentUserId)
-          .collection(widget.receiver.uid)
-          .orderBy('timestamp', descending: true)
-          .snapshots(),
+      stream:
+          Firestore.instance.collection("chats").document(_currentUserId).collection(widget.receiver.uid).orderBy('timestamp', descending: true).snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.data == null) {
           return Center(child: CircularProgressIndicator());
@@ -139,12 +135,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15),
       child: Container(
-        alignment: _message.senderId == _currentUserId
-            ? Alignment.centerRight
-            : Alignment.centerLeft,
-        child: _message.senderId == _currentUserId
-            ? senderLayout(_message)
-            : receiverLayout(_message),
+        alignment: _message.senderId == _currentUserId ? Alignment.centerRight : Alignment.centerLeft,
+        child: _message.senderId == _currentUserId ? senderLayout(_message) : receiverLayout(_message),
       ),
     );
   }
@@ -154,8 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Container(
       margin: EdgeInsets.only(top: 12),
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
       decoration: BoxDecoration(
         color: Color(0xff2b343b),
         borderRadius: BorderRadius.only(
@@ -179,14 +170,13 @@ class _ChatScreenState extends State<ChatScreen> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                
                 message.message + "\n",
-                 overflow: TextOverflow.ellipsis,
-                 maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
-                  
+
                   //  overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -212,8 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Container(
       margin: EdgeInsets.only(top: 12),
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
       decoration: BoxDecoration(
         color: Color(0xff1e2225),
         borderRadius: BorderRadius.only(
@@ -258,13 +247,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
     Future<String> uploadImageToStorage(File image) async {
       try {
-        _storageReference = FirebaseStorage.instance
-            .ref()
-            .child('${DateTime.now().millisecondsSinceEpoch}');
+        _storageReference = FirebaseStorage.instance.ref().child('${DateTime.now().millisecondsSinceEpoch}');
         StorageUploadTask _storageUploadTask = _storageReference.putFile(image);
 
-        var url =
-            await (await _storageUploadTask.onComplete).ref.getDownloadURL();
+        var url = await (await _storageUploadTask.onComplete).ref.getDownloadURL();
 
         return url;
       } catch (e) {
@@ -287,24 +273,12 @@ class _ChatScreenState extends State<ChatScreen> {
       var map = _message.toImageMap();
 
       // set
-      await Firestore.instance
-          .collection("chats")
-          .document(_message.senderId)
-          .collection(_message.receiverId)
-          .add(map);
+      await Firestore.instance.collection("chats").document(_message.senderId).collection(_message.receiverId).add(map);
 
-      await Firestore.instance
-          .collection("chats")
-          .document(_message.receiverId)
-          .collection(_message.senderId)
-          .add(map);
+      await Firestore.instance.collection("chats").document(_message.receiverId).collection(_message.senderId).add(map);
     }
 
-    void uploadImage(
-        {@required File image,
-        @required String receivedId,
-        @required String senderId,
-        @required ImageUploadProvider imageUploadProvider}) async {
+    void uploadImage({@required File image, @required String receivedId, @required String senderId, @required ImageUploadProvider imageUploadProvider}) async {
       imageUploadProvider.setToLoading();
       String url = await uploadImageToStorage(image);
       imageUploadProvider.setToIdle();
@@ -312,12 +286,8 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     pickImage({@required ImageSource source}) async {
-      File selectedImage = await DatabaseServices.pickImage(source: source);
-      uploadImage(
-          image: selectedImage,
-          receivedId: widget.receiver.uid,
-          senderId: _currentUserId,
-          imageUploadProvider: _imageUploadProvider);
+      File selectedImage = await ImageUtils.pickImage(source: source);
+      uploadImage(image: selectedImage, receivedId: widget.receiver.uid, senderId: _currentUserId, imageUploadProvider: _imageUploadProvider);
     }
 
     addMediaModal(context) {
@@ -343,10 +313,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Content and tools",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -362,26 +329,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         icon: Icons.image,
                         onTap: () => pickImage(source: ImageSource.gallery),
                       ),
-                      ModalTile(
-                          title: "File",
-                          subtitle: "Share files",
-                          icon: Icons.tab),
-                      ModalTile(
-                          title: "Contact",
-                          subtitle: "Share contacts",
-                          icon: Icons.contacts),
-                      ModalTile(
-                          title: "Location",
-                          subtitle: "Share a location",
-                          icon: Icons.add_location),
-                      ModalTile(
-                          title: "Schedule Call",
-                          subtitle: "Arrange a skype call and get reminders",
-                          icon: Icons.schedule),
-                      ModalTile(
-                          title: "Create Poll",
-                          subtitle: "Share polls",
-                          icon: Icons.poll)
+                      ModalTile(title: "File", subtitle: "Share files", icon: Icons.tab),
+                      ModalTile(title: "Contact", subtitle: "Share contacts", icon: Icons.contacts),
+                      ModalTile(title: "Location", subtitle: "Share a location", icon: Icons.add_location),
+                      ModalTile(title: "Schedule Call", subtitle: "Arrange a skype call and get reminders", icon: Icons.schedule),
+                      ModalTile(title: "Create Poll", subtitle: "Share polls", icon: Icons.poll)
                     ],
                   ),
                 ),
@@ -399,10 +351,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Container(
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Color(0xff00b6f3), Color(0xff0184dc)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight),
+                gradient: LinearGradient(colors: [Color(0xff00b6f3), Color(0xff0184dc)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                 shape: BoxShape.circle,
               ),
               child: Icon(Icons.add),
@@ -420,9 +369,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   color: Colors.white,
                 ),
                 onChanged: (val) {
-                  (val.length > 0 && val.trim() != "")
-                      ? setWritingTo(true)
-                      : setWritingTo(false);
+                  (val.length > 0 && val.trim() != "") ? setWritingTo(true) : setWritingTo(false);
                 },
                 decoration: InputDecoration(
                   hintText: "Type a message",
@@ -434,8 +381,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         const Radius.circular(51.0),
                       ),
                       borderSide: BorderSide.none),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   filled: true,
                   fillColor: Color(0xff272c35),
                 ),
@@ -471,10 +417,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ? Container(
                   margin: EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Color(0xff00b6f3), Color(0xff0184dc)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight),
+                      gradient: LinearGradient(colors: [Color(0xff00b6f3), Color(0xff0184dc)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                       shape: BoxShape.circle),
                   child: IconButton(
                     icon: Icon(
@@ -495,8 +438,7 @@ class _ChatScreenState extends State<ChatScreen> {
         IconButton(
             icon: Icon(Icons.home),
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => HomeController()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeController()));
             })
       ],
       leading: IconButton(
@@ -520,11 +462,8 @@ class ModalTile extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final Function onTap;
-  const ModalTile(
-      {@required this.title,
-      @required this.subtitle,
-      @required this.icon,
-      this.onTap});
+
+  const ModalTile({@required this.title, @required this.subtitle, @required this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {
