@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:helpdesk_2/models/helper.dart';
+import 'package:helpdesk_2/data/db/models/helper.dart';
+
 
 class HelperTile extends StatelessWidget {
   final Helper helper;

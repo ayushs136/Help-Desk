@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/Screens/Authenticate/authentication.dart';
+import 'package:helpdesk_2/data/db/models/helper.dart';
+import 'package:helpdesk_2/data/service/auth_service.dart';
 import 'package:helpdesk_2/Screens/Home/helper_list.dart';
 import 'package:helpdesk_2/Screens/Home/search.dart';
 import 'package:helpdesk_2/Screens/Home/side_drawer.dart';
-import 'package:helpdesk_2/models/helper.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {

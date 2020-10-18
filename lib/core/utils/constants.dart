@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const textInputDecoration = InputDecoration(
+const TextInputDecoration = InputDecoration(
  
   // filled: true,
  

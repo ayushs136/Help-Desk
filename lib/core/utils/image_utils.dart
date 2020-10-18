@@ -7,8 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as Im;
 import 'package:path_provider/path_provider.dart';
 
-class DatabaseServices {
-  static final db = Firestore.instance;
+class ImageUtils {
 
   static Future<File> pickImage({@required ImageSource source}) async {
     File selectedImage = await ImagePicker.pickImage(source: source);

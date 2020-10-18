@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:helpdesk_2/provider/image_upload_provider.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 import 'package:helpdesk_2/screens/authentication/sign_up.dart';
 import 'package:helpdesk_2/screens/home/navigation_view.dart';
 import 'package:helpdesk_2/screens/home/onboardingfirst_page.dart';
-import 'package:helpdesk_2/shared/loading.dart';
 import 'package:provider/provider.dart';
+
+import 'Screens/authentication/provider_widget.dart';
+import 'core/widget/loading.dart';
+import 'data/service/auth_services.dart';
 
 void main() => runApp(MyApp());
 

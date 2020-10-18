@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/helper.dart';
+import 'package:helpdesk_2/data/db/models/helper.dart';
 import 'package:helpdesk_2/screens/home/chat_screens/chat_screens.dart';
 
 class HelperProfile extends StatefulWidget {

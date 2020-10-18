@@ -1,16 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:helpdesk_2/enum/user_state.dart';
+import 'package:helpdesk_2/Screens/authentication/provider_widget.dart';
+import 'package:helpdesk_2/core/enum/user_state.dart';
+import 'package:helpdesk_2/data/service/auth_services.dart';
 import 'package:helpdesk_2/provider/user_provider.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
 import 'package:helpdesk_2/screens/home/chat_screens/chat_list_screen.dart';
-
 import 'package:helpdesk_2/screens/home/helper_list_screen.dart';
 import 'package:helpdesk_2/screens/home/search.dart';
 import 'package:helpdesk_2/screens/home/sidebar.dart';
-
 import 'package:helpdesk_2/screens/home/user_profile.dart';
 import 'package:provider/provider.dart';
 

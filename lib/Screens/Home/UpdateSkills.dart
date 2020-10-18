@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/models/skills.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
-
-import 'package:helpdesk_2/shared/constants.dart';
+import 'package:helpdesk_2/Screens/authentication/provider_widget.dart';
+import 'package:helpdesk_2/core/utils/constants.dart';
+import 'package:helpdesk_2/data/db/models/helper.dart';
+import 'package:helpdesk_2/data/db/models/skills.dart';
+import 'package:provider/provider.dart';
 
 class UpdateSkills extends StatefulWidget {
   final Helper helper;
@@ -53,7 +53,7 @@ class _UpdateSkillsState extends State<UpdateSkills> {
                 children: <Widget>[
                   TextField(
                       style: TextStyle(color: Colors.white),
-                      decoration: textInputDecoration.copyWith(
+                      decoration: TextInputDecoration.copyWith(
                           hintText: "Skill 1 - Best skill",
                           hintStyle: TextStyle(color: Colors.grey)),
                       controller: _skill1Controller,
@@ -68,7 +68,7 @@ class _UpdateSkillsState extends State<UpdateSkills> {
                   ),
                   TextField(
                       style: TextStyle(color: Colors.white),
-                      decoration: textInputDecoration.copyWith(
+                      decoration: TextInputDecoration.copyWith(
                           hintText: "Skill 2",
                           hintStyle: TextStyle(color: Colors.grey)),
                       controller: _skill2Controller,
@@ -83,7 +83,7 @@ class _UpdateSkillsState extends State<UpdateSkills> {
                   ),
                   TextField(
                       style: TextStyle(color: Colors.white),
-                      decoration: textInputDecoration.copyWith(
+                      decoration: TextInputDecoration.copyWith(
                           hintText: "Skill 3",
                           hintStyle: TextStyle(color: Colors.grey)),
                       controller: _skill3Controller,
@@ -98,7 +98,7 @@ class _UpdateSkillsState extends State<UpdateSkills> {
                   ),
                   TextField(
                       style: TextStyle(color: Colors.white),
-                      decoration: textInputDecoration.copyWith(
+                      decoration: TextInputDecoration.copyWith(
                           hintText: "Skill 4",
                           hintStyle: TextStyle(color: Colors.grey)),
                       controller: _skill4Controller,
