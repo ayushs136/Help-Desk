@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:helpdesk/Screens/Authenticate/authentication.dart';
-import 'package:helpdesk/constants/loading.dart';
+import 'package:helpdesk_2/Screens/Authenticate/authentication.dart';
+import 'package:helpdesk_2/constants/loading.dart';
 
 
 class SignIn extends StatefulWidget {

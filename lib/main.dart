@@ -29,16 +29,13 @@ class MyApp extends StatelessWidget {
           ),
           home: HomeController(),
           routes: <String, WidgetBuilder>{
-            "/signUp": (BuildContext context) =>
-                SignUpView(authFormType: AuthFormType.signUp),
-            "/signIn": (BuildContext context) =>
-                SignUpView(authFormType: AuthFormType.signIn),
+            "/signUp": (BuildContext context) => SignUpView(authFormType: AuthFormType.signUp),
+            "/signIn": (BuildContext context) => SignUpView(authFormType: AuthFormType.signIn),
             "/home": (BuildContext context) => HomeController(),
             "/anonymousSignIn": (BuildContext context) => SignUpView(
                   authFormType: AuthFormType.anonymous,
                 ),
-            "/convertUser": (BuildContext context) =>
-                SignUpView(authFormType: AuthFormType.convert),
+            "/convertUser": (BuildContext context) => SignUpView(authFormType: AuthFormType.convert),
           },
         ),
       ),

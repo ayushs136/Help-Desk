@@ -68,19 +68,19 @@ class _OnBoardingState extends State<OnBoarding> {
                       ),
                     ),
                     onPressed: () {
-                      // showDialog(
-                      //     context: context,
-                      //     builder: (BuildContext context) {
-                      //       return CustomDialog(
-                      //         title: "Would you like to create a free account?",
-                      //         description:
-                      //             "with an account, your data will be securely saved, allowing us to know you better!",
-                      //         primaryButtonText: "Create my Account",
-                      //         primaryButtonRoute: "/signUp",
-                      //         secondaryButtonRoute: "/anonymousSignIn",
-                      //         secondaryButtonText: "Maybe Later",
-                      //       );
-                      //     });
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialog(
+                              title: "Would you like to create a free account?",
+                              description:
+                                  "with an account, your data will be securely saved, allowing us to know you better!",
+                              primaryButtonText: "Create my Account",
+                              primaryButtonRoute: "/signUp",
+                              secondaryButtonText: "Maybe Later",
+                              secondaryButtonRoute: "/anonymousSignIn",
+                            );
+                          });
                     },
                   ),
                   SizedBox(

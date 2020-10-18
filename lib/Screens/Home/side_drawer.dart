@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk/Screens/Home/contact_us.dart';
-import 'package:helpdesk/Screens/Home/onboarding.dart';
-import 'package:helpdesk/Screens/Home/setting.dart';
-import 'package:helpdesk/Screens/Home/show_profile.dart';
+import 'package:helpdesk_2/Screens/Home/contact_us.dart';
+import 'package:helpdesk_2/Screens/Home/onboarding.dart';
+import 'package:helpdesk_2/Screens/Home/setting.dart';
+import 'package:helpdesk_2/Screens/Home/show_profile.dart';
 
 class SideBarMenu extends StatelessWidget {
   @override
