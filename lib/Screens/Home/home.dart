@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-
-import 'package:helpdesk/Screens/Authenticate/authentication.dart';
-import 'package:helpdesk/Screens/Home/helper_list.dart';
-import 'package:helpdesk/Screens/Home/search.dart';
-
-import 'package:helpdesk/Screens/Home/side_drawer.dart';
-import 'package:helpdesk/models/helper.dart';
-
+import 'package:helpdesk_2/Screens/Authenticate/authentication.dart';
+import 'package:helpdesk_2/Screens/Home/helper_list.dart';
+import 'package:helpdesk_2/Screens/Home/search.dart';
+import 'package:helpdesk_2/Screens/Home/side_drawer.dart';
+import 'package:helpdesk_2/models/helper.dart';
 import 'package:provider/provider.dart';
-
-// import 'helper_tile.dart';
+import 'helper_tile.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -24,10 +20,8 @@ class _HomeState extends State<Home> {
         child: Scaffold(
           drawer: SideBarMenu(),
           appBar: AppBar(
-            
             title: Text("Help Desk"),
             actions: <Widget>[
-        
               FlatButton.icon(
                   onPressed: () {
                     dynamic results = AuthService().signOut();
@@ -40,13 +34,10 @@ class _HomeState extends State<Home> {
           body: HelperList(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              SearchHelper();
+              // SearchHelper();
             },
             child: Icon(Icons.search),
           ),
-        
-        
-        
         ));
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:helpdesk/models/helper.dart';
+import 'package:helpdesk_2/models/helper.dart';
 
 class HelperTile extends StatelessWidget {
   final Helper helper;
@@ -48,7 +48,7 @@ class HelperTile extends StatelessWidget {
           },
           child: Icon(Icons.perm_contact_calendar)),
 
-      title: Text("${helper.displayName}"),
+      title: Text("${helper.name}"),
 
       // title: Text("Ayush Sharma"),
       subtitle: Text("${helper.skills}"),

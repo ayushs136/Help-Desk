@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk/Screens/Home/helper_tile.dart';
-import 'package:helpdesk/models/helper.dart';
+import 'package:helpdesk_2/Screens/Home/helper_tile.dart';
+import 'package:helpdesk_2/models/helper.dart';
 import 'package:provider/provider.dart';
 
 class HelperList extends StatefulWidget {

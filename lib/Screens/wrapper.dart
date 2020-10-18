@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:helpdesk/Screens/Home/home.dart';
-import 'package:helpdesk/models/user.dart';
+import 'package:helpdesk_2/Screens/Home/home.dart';
+import 'package:helpdesk_2/models/user.dart';
 import 'package:provider/provider.dart';
 
 import 'Authenticate/sign_in.dart';
