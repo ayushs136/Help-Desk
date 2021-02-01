@@ -8,9 +8,9 @@ import 'package:image/image.dart' as Im;
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseServices {
-  static final db = Firestore.instance;
+  static final db = FirebaseFirestore.instance;
 
-  static Future<File> pickImage({@required ImageSource source}) async {
+  static Future<File> pickImage({ ImageSource source}) async {
     File selectedImage = await ImagePicker.pickImage(source: source);
     return compressImage(selectedImage);
   }

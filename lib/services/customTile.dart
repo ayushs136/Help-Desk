@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class CustomTile extends StatelessWidget {
   final Widget leading;
   final Widget title;
@@ -13,11 +12,10 @@ class CustomTile extends StatelessWidget {
   final GestureLongPressCallback onLongPress;
 
   const CustomTile(
-      {Key key,
-      @required this.leading,
-      @required this.title,
+      {this.leading,
+      this.title,
       this.icon,
-      @required this.subtitle,
+      this.subtitle,
       this.trailing,
       this.margin = const EdgeInsets.all(2),
       this.mini = true,
@@ -64,7 +62,7 @@ class CustomTile extends StatelessWidget {
                         )
                       ],
                     ),
-                    trailing??Container(),
+                    trailing ?? Container(),
                   ],
                 ),
               ),

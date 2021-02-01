@@ -1,44 +1,41 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/contact.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/models/message.dart';
+// import 'package:flutter/material.dart';
+import 'package:helpdesk_shift/models/contact.dart';
+import 'package:helpdesk_shift/models/helper.dart';
+import 'package:helpdesk_shift/models/message.dart';
 
 class ChatMethods {
   final String CHAT_COLLECTION = "chats";
   final String CONTACT_COLLECTION = "contacts";
-  final String USER_COLLECTION  = "userData";
-
-
+  final String USER_COLLECTION = "userData";
 
   Future<void> addMessageToDb(
       Message message, Helper sender, Helper reciever) async {
     var map = message.toMap();
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection(CHAT_COLLECTION)
-        .document(message.senderId)
+        .doc(message.senderId)
         .collection(message.receiverId)
         .add(map);
     addToContacts(senderId: message.senderId, receiverId: message.receiverId);
 
-    return await Firestore.instance
+    return await FirebaseFirestore.instance
         .collection(CHAT_COLLECTION)
-        .document(message.receiverId)
+        .doc(message.receiverId)
         .collection(message.senderId)
         .add(map);
   }
 
-
-    DocumentReference getContactDocument({String of, String forContact}) {
-    return Firestore.instance
+  DocumentReference getContactDocument({String of, String forContact}) {
+    return FirebaseFirestore.instance
         .collection(USER_COLLECTION)
-        .document(of)
+        .doc(of)
         .collection(CONTACT_COLLECTION)
-        .document(forContact);
+        .doc(forContact);
   }
 
-  addToContacts({String senderId, String receiverId}) async {
+  addToContacts({String senderId = '', String receiverId = ''}) async {
     Timestamp currentTime = Timestamp.now();
     await addToSendersContact(senderId, receiverId, currentTime);
     await addToReceiverContact(senderId, receiverId, currentTime);
@@ -58,8 +55,7 @@ class ChatMethods {
 
       var receiverMap = receiverContact.toMap(receiverContact);
 
-      getContactDocument(of: senderId, forContact: receiverId)
-          .setData(receiverMap);
+      getContactDocument(of: senderId, forContact: receiverId).set(receiverMap);
     }
   }
 
@@ -82,17 +78,18 @@ class ChatMethods {
     }
   }
 
-  Stream<QuerySnapshot> fetchContact({String userId}) => Firestore.instance
-      .collection(USER_COLLECTION)
-      .document(userId)
-      .collection(CONTACT_COLLECTION)
-      .snapshots();
+  Stream<QuerySnapshot> fetchContact({String userId = ''}) =>
+      FirebaseFirestore.instance
+          .collection(USER_COLLECTION)
+          .doc(userId)
+          .collection(CONTACT_COLLECTION)
+          .snapshots();
 
   Stream<QuerySnapshot> fetchLastMessageBetween(
-          {@required String senderId, @required String receiverId}) =>
-      Firestore.instance
+          {String senderId, String receiverId}) =>
+      FirebaseFirestore.instance
           .collection(CHAT_COLLECTION)
-          .document(senderId)
+          .doc(senderId)
           .collection(receiverId)
           .orderBy('timestamp')
           .snapshots();

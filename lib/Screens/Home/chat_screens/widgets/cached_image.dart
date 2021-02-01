@@ -17,8 +17,8 @@
       this.imageUrl, {
       this.isRound = false,
       this.radius = 0,
-      this.height,
-      this.width,
+      this.height=50,
+      this.width=50,
       this.fit = BoxFit.cover,
     });
 

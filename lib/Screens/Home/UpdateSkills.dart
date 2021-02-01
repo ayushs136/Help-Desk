@@ -1,24 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/models/skills.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_shift/models/helper.dart';
+import 'package:helpdesk_shift/models/skills.dart';
+import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
 
-import 'package:helpdesk_2/shared/constants.dart';
+import 'package:helpdesk_shift/shared/constants.dart';
 
 class UpdateSkills extends StatefulWidget {
   final Helper helper;
   final Skills skills;
 
-  UpdateSkills({@required this.helper, @required this.skills, Key key});
+  UpdateSkills({ this.helper,  this.skills, Key key});
 
   @override
   _UpdateSkillsState createState() => _UpdateSkillsState();
 }
 
 class _UpdateSkillsState extends State<UpdateSkills> {
-  final _db = Firestore.instance;
+  final _db = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Helper helper = new Helper();
 
@@ -145,10 +145,11 @@ class _UpdateSkillsState extends State<UpdateSkills> {
                 print(skillsList);
 
                 // });
-                final uid = await ProviderWidget.of(context).auth.getCurrentUID();
+                final uid =
+                    await ProviderWidget.of(context).auth.getCurrentUID();
 
                 FirebaseUser currentUser;
-                currentUser = await _auth.currentUser();
+                currentUser =  _auth.currentUser;
                 helper = Helper(
                   email: currentUser.email,
                   name: currentUser.displayName,
@@ -160,8 +161,8 @@ class _UpdateSkillsState extends State<UpdateSkills> {
                 );
                 await _db
                     .collection('userData')
-                    .document(uid)
-                    .setData(helper.toMap(helper));
+                    .doc(uid)
+                    .set(helper.toMap(helper));
 
                 // await _db
                 //     .collection("deskview")
@@ -177,8 +178,8 @@ class _UpdateSkillsState extends State<UpdateSkills> {
                 );
                 await _db
                     .collection("skillCollection")
-                    .document(uid)
-                    .setData(skill.toMap(skill), merge: true);
+                    .doc(uid)
+                    .set(skill.toMap(skill), SetOptions(merge: true));
 
                 Navigator.pop(context);
                 // }

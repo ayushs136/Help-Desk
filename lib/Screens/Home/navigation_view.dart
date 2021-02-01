@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:helpdesk_2/enum/user_state.dart';
-import 'package:helpdesk_2/provider/user_provider.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
-import 'package:helpdesk_2/screens/home/chat_screens/chat_list_screen.dart';
+import 'package:helpdesk_shift/enum/user_state.dart';
+import 'package:helpdesk_shift/provider/user_provider.dart';
+import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
+import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_shift/screens/home/addPost.dart';
+import 'package:helpdesk_shift/screens/home/chat_screens/chat_list_screen.dart';
 
-import 'package:helpdesk_2/screens/home/helper_list_screen.dart';
-import 'package:helpdesk_2/screens/home/search.dart';
-import 'package:helpdesk_2/screens/home/sidebar.dart';
+import 'package:helpdesk_shift/screens/home/helper_list_screen.dart';
+import 'package:helpdesk_shift/screens/home/search.dart';
+import 'package:helpdesk_shift/screens/home/sidebar.dart';
 
-import 'package:helpdesk_2/screens/home/user_profile.dart';
+import 'package:helpdesk_shift/screens/home/user_profile.dart';
+import 'package:helpdesk_shift/screens/home/feeds.dart';
+
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -19,7 +22,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with WidgetsBindingObserver{
+class _HomeState extends State<Home> with WidgetsBindingObserver {
   // bool _showIcon = false;
 
   // bool visible() {
@@ -35,29 +38,31 @@ class _HomeState extends State<Home> with WidgetsBindingObserver{
   final AuthServices _authServices = AuthServices();
   UserProvider userProvider;
 
+  final List<Widget> _children = [
+    Feeds(),
+    HelpersNearBy(),
+    SearchScreen(),
+    ChatListScreen(),
+    UserProfile(),
+  ];
 
-  final List<Widget> _children = [HelpersNearBy(), ChatListScreen(), UserProfile() ];
-
-
- @override
-  void initState()
- {
-      super.initState();
-   SchedulerBinding.instance.addPostFrameCallback((_) async {
+  @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
       userProvider = Provider.of<UserProvider>(context, listen: false);
       await userProvider.refreshUser();
 
       _authServices.setUserState(
         userId: userProvider.getHelper.uid,
-        userState: UserState.Online, 
+        userState: UserState.Online,
       );
     });
 
     WidgetsBinding.instance.addObserver(this);
-}
+  }
 
-
- @override
+  @override
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
@@ -69,8 +74,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver{
         (userProvider != null && userProvider.getHelper != null)
             ? userProvider.getHelper.uid
             : "";
-  
-super.didChangeAppLifecycleState(state);
+
+    super.didChangeAppLifecycleState(state);
 
     switch (state) {
       case AppLifecycleState.resumed:
@@ -100,12 +105,6 @@ super.didChangeAppLifecycleState(state);
     }
   }
 
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,74 +130,102 @@ super.didChangeAppLifecycleState(state);
       //   ],
       // ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.search),
-        elevation: 10,
+        backgroundColor: Color(0xff3282b8),
+        child: Column(
+          children: [
+            SizedBox(height: 7),
+            Icon(Icons.add),
+            // SizedBox(height: 5),
+            Text('Add Post', style: myStyle(9, Colors.white, FontWeight.bold)),
+          ],
+        ),
+        elevation: 30,
         onPressed: () {
-          print("Search pressed");
+          // print("Add pressed");
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => SearchScreen()));
+              .push(MaterialPageRoute(builder: (context) => AddPost()));
         },
       ),
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Color(0xff232d36),
-        title: Text("Helpers Desk View"),
-        elevation: 30,
-        actionsIconTheme:
-            IconThemeData(color: Colors.white, opacity: 10, size: 90),
-        actions: <Widget>[
-          FlatButton(
-            child: Icon(
-              Icons.exit_to_app,
-              color: Colors.white,
-              size: 30,
-            ),
-            onPressed: () async {
-              try {
-                AuthServices auth = ProviderWidget.of(context).auth;
-                await auth.signOut();
-                print("Signed out");
-              } catch (e) {
-                print(e + " error siging out");
-              }
-            },
-          ),
-          // Visibility(
-          //   // visible:visible(),
-          //   child: IconButton(
-          //     icon: Icon(Icons.account_circle),
-          //     onPressed: () {
-          //       Navigator.of(context).pushNamed("/convertUser");
-          //     },
-          //   ),
-          // ),
-        ],
-      ),
+      backgroundColor: Colors.white,
+      // appBar: AppBar(
+      //   backgroundColor: Color(0xff3282b8),
+      //   title: Text("Helpers"),
+      //   shadowColor: Colors.grey,
+      //   elevation: 10,
+      //   actionsIconTheme:
+      //       IconThemeData(color: Colors.white, opacity: 10, size: 90),
+      //   actions: <Widget>[
+      //     FlatButton(
+      //       child: Icon(
+      //         Icons.exit_to_app,
+      //         color: Colors.white,
+      //         size: 30,
+      //       ),
+      //       onPressed: () async {
+      //         try {
+      //           AuthServices auth = ProviderWidget.of(context).auth;
+      //           await auth.signOut();
+      //           print("Signed out");
+      //         } catch (e) {
+      //           print(e + " error siging out");
+      //         }
+      //       },
+      //     ),
+      //     // Visibility(
+      //     //   // visible:visible(),
+      //     //   child: IconButton(
+      //     //     icon: Icon(Icons.account_circle),
+      //     //     onPressed: () {
+      //     //       Navigator.of(context).pushNamed("/convertUser");
+      //     //     },
+      //     //   ),
+      //     // ),
+      //   ],
+      // ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Color(0xff232d36),
+          backgroundColor: Color(0xff1b262c),
+          // fixedColor: Color(0xff1b262c),
           currentIndex: _currentIndex,
+          selectedItemColor: Colors.teal,
+          // unselectedItemColor: Colors.pink,
+          selectedFontSize: 15,
+          // unselectedLabelStyle: TextStyle(color: Colors.grey),
+          showUnselectedLabels: true,
+          unselectedItemColor: Colors.grey,
+          // unselectedItemColor: Colors.grey,
+          unselectedIconTheme: IconThemeData(color: Colors.black),
+          selectedIconTheme: IconThemeData(color: Colors.blue),
+          // fixedColor: ,
+          elevation: 30,
           onTap: onTabTapped,
           items: [
             BottomNavigationBarItem(
-                icon: new Icon(Icons.people),
-                title: new Text(
-                  "Helpers",
-                  style: TextStyle(color: Colors.white),
-                )),
-                   BottomNavigationBarItem(
-                icon: new Icon(Icons.chat),
-                title: new Text(
-                  "Chats",
-                  style: TextStyle(color: Colors.white),
-                )),
+                icon: new Icon(
+                  Icons.explore,
+                ),
+                label: "Feeds"),
             BottomNavigationBarItem(
-                icon: new Icon(Icons.person),
-                title: new Text(
-                  "Profile",
-                  style: TextStyle(color: Colors.white),
-                )),
-         
+                icon: new Icon(
+                  Icons.people,
+                ),
+                label: "Helpers"),
+            BottomNavigationBarItem(
+                icon: new Icon(
+                  Icons.search,
+                ),
+                label: "Search"),
+            BottomNavigationBarItem(
+                icon: new Icon(
+                  Icons.chat,
+                ),
+                label: 'Chats'),
+            BottomNavigationBarItem(
+              icon: new Icon(
+                Icons.person,
+              ),
+              label: "Profile",
+            ),
           ]),
     );
   }

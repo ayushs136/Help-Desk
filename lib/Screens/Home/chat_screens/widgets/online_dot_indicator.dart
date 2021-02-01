@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/enum/user_state.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
+import 'package:helpdesk_shift/enum/user_state.dart';
+import 'package:helpdesk_shift/models/helper.dart';
+import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
 
 class OnlineDotIndicator extends StatelessWidget {
   final String uid;
   final AuthServices _authServices = AuthServices();
 
   OnlineDotIndicator({
-    @required this.uid,
+     this.uid,
   });
 
 
@@ -62,7 +62,7 @@ class OnlineDotIndicator extends StatelessWidget {
          Helper helper;
 
           if (snapshot.hasData && snapshot.data.data != null) {
-            helper= Helper.fromMap(snapshot.data.data);
+            helper= Helper.fromMap(snapshot.data.data());
           }
 
           return Container(

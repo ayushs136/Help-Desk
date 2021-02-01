@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget title;
   final List<Widget> actions;
@@ -8,12 +7,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool centerTitle;
 
   const CustomAppBar(
-      {Key key,
-      @required this.title,
-      @required this.actions,
-      @required this.leading,
-      @required this.centerTitle})
-      : super(key: key);
+      {this.title, this.actions, this.leading, this.centerTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: Colors.black,
           border: Border(
               bottom: BorderSide(
-                  color: Colors.black,
-                  width: 1.4,
-                  style: BorderStyle.solid))),
+                  color: Colors.black, width: 1.4, style: BorderStyle.solid))),
       child: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
@@ -37,5 +29,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  final Size preferredSize = const Size.fromHeight(kToolbarHeight*1.2);
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight * 1.2);
 }

@@ -14,10 +14,10 @@ class CustomTile extends StatelessWidget {
 
   const CustomTile(
       {Key key,
-      @required this.leading,
-      @required this.title,
+       this.leading,
+       this.title,
       this.icon,
-      @required this.subtitle,
+       this.subtitle,
       this.trailing,
       this.margin = const EdgeInsets.all(2),
       this.mini = true,

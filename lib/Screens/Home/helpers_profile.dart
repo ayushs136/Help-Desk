@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/screens/home/chat_screens/chat_screens.dart';
+import 'package:helpdesk_shift/models/helper.dart';
+import 'package:helpdesk_shift/screens/home/chat_screens/chat_screens.dart';
 
 class HelperProfile extends StatefulWidget {
   final Helper helper;
@@ -175,27 +175,26 @@ class _HelperProfileState extends State<HelperProfile> {
               ),
 
               (widget.helper.isAvailable == true)
-                      ?RaisedButton(
-
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ChatScreen(receiver: widget.helper,)));
-
-                },
-                color:Color(0xff0184dc),
-                child: Text(
-                  "Ask for Help!",
-                  // snapshot.data.email,
-                  // 'chun.li@thenetninja.co.uk',
-                  style: TextStyle(
-                    color: Color(0xff19191b),
-                    fontSize: 20.0,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-              ):Container(),
-
-
-
+                  ? RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ChatScreen(
+                                  receiver: widget.helper,
+                                )));
+                      },
+                      color: Color(0xff0184dc),
+                      child: Text(
+                        "Ask for Help!",
+                        // snapshot.data.email,
+                        // 'chun.li@thenetninja.co.uk',
+                        style: TextStyle(
+                          color: Color(0xff19191b),
+                          fontSize: 20.0,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ),

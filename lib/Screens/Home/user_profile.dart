@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/models/skills.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
-import 'package:helpdesk_2/screens/home/UpdateSkills.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helpdesk_shift/models/helper.dart';
+import 'package:helpdesk_shift/models/skills.dart';
+import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
+import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_shift/screens/home/UpdateSkills.dart';
 
 class UserProfile extends StatefulWidget {
   final Helper helper;
@@ -17,17 +19,31 @@ class _UserProfileState extends State<UserProfile> {
   final newHelper = new Helper();
   final newSkills = new Skills();
 
+  updateAvailability(bool isAvailable) async {
+    Map<String, bool> data = Map();
+
+    data['isAvailable'] = isAvailable;
+
+    final uid = await ProviderWidget.of(context).auth.getCurrentUID();
+    await FirebaseFirestore.instance
+        .collection('userData')
+        .doc(uid)
+        .set(data, SetOptions(merge: true));
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<Helper> getHelperData(BuildContext context) async {
       // Helper Helper = Helper();
       final uid = await ProviderWidget.of(context).auth.getCurrentUID();
-      DocumentSnapshot userData =
-          await Firestore.instance.collection('userData').document(uid).get();
-      print(userData.data['name']);
+      DocumentSnapshot userData = await FirebaseFirestore.instance
+          .collection('userData')
+          .doc(uid)
+          .get();
+      print(userData.data()['name']);
       // Helper.fr
 
-      return Helper.fromMap(userData.data);
+      return Helper.fromMap(userData.data());
     }
 
     return FutureBuilder(
@@ -55,6 +71,24 @@ class _UserProfileState extends State<UserProfile> {
                 FloatingActionButtonLocation.centerFloat,
             backgroundColor: Color(0xff000000),
             appBar: AppBar(
+              actions: [
+                FlatButton(
+                  child: Icon(
+                    Icons.exit_to_app,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  onPressed: () async {
+                    try {
+                      AuthServices auth = ProviderWidget.of(context).auth;
+                      await auth.signOut();
+                      print("Signed out");
+                    } catch (e) {
+                      print(e + " error siging out");
+                    }
+                  },
+                ),
+              ],
               centerTitle: true,
               title: Text(
                 "Helper's Profile",
@@ -170,22 +204,48 @@ class _UserProfileState extends State<UserProfile> {
                     ),
 
                     SizedBox(width: 20.0),
-                    Text(
-                      "\nIs Available?",
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 20.0,
-                        letterSpacing: 2.0,
-                      ),
-                    ),
-                    Switch(
+                    // Text(
+                    //   "\nIs Available?",
+                    //   style: TextStyle(
+                    //     color: Colors.grey[400],
+                    //     fontSize: 20.0,
+                    //     letterSpacing: 2.0,
+                    //   ),
+                    // ),
+
+                    SwitchListTile(
                       value: snapshot.data.isAvailable,
+                      // secondary: Icon(
+                      //   FontAwesomeIcons.dashcube,
+                      //   color: Colors.grey[400],
+                      // ),
+                      title: Text(
+                        "Is Available?",
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 20.0,
+                          letterSpacing: 2.0,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "(Show visibility in Helpers list)",
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 15.0,
+                        ),
+                      ),
+
                       activeColor: Colors.white,
-                      hoverColor: Colors.black,
+                      // hoverColor: Colors.black,
                       activeTrackColor: Colors.green,
                       inactiveTrackColor: Colors.red,
-                      onChanged: (bool state) => updateAvailability(state),
-                    ),
+                      onChanged: (bool val) {
+                        setState(() {
+                          snapshot.data.isAvailable = val;
+                        });
+                        updateAvailability(val);
+                      },
+                    )
                   ],
                 ),
               ),
@@ -197,17 +257,5 @@ class _UserProfileState extends State<UserProfile> {
         }
       },
     );
-  }
-
-  updateAvailability(bool isAvailable) async {
-    Map<String, bool> data = Map();
-
-    data['isAvailable'] = isAvailable;
-
-    final uid = await ProviderWidget.of(context).auth.getCurrentUID();
-    await Firestore.instance
-        .collection('userData')
-        .document(uid)
-        .setData(data, merge: true);
   }
 }

@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
-// import 'package:helpdesk_2/models/customer.dart';
-// import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
-// import 'package:helpdesk_2/services/database.dart';
+// import 'package:helpdesk_shift/models/customer.dart';
+// import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
+// import 'package:helpdesk_shift/services/database.dart';
 // import 'dart:async';
 // import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
@@ -10,7 +10,7 @@
 
 //   final Customer customer;
 
-//   NewTripDateView({@required this.customer, Key key}) : super(key: key);
+//   NewTripDateView({required this.customer, Key key}) : super(key: key);
 
 //   @override
 //   _NewTripDateViewState createState() => _NewTripDateViewState();

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
+import 'package:helpdesk_shift/models/helper.dart';
+import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
 
 class UserProvider with ChangeNotifier {
   Helper _helper;

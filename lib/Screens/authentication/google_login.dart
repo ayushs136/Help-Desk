@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:helpdesk_2/main.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_shift/main.dart';
+import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
 
 class GoogleLogIn extends StatefulWidget {
   @override
@@ -32,7 +32,8 @@ class _GoogleLogInState extends State<GoogleLogIn> {
                     }
                   });
 
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomeController()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => HomeController()));
 
                   // _auth.addDataToDb();
 

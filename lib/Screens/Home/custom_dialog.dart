@@ -13,10 +13,10 @@ class CustomDialog extends StatelessWidget {
       secondaryButtonRoute;
 
   CustomDialog(
-      {@required this.title,
-      @required this.description,
-      @required this.primaryButtonText,
-      @required this.primaryButtonRoute,
+      { this.title,
+       this.description,
+       this.primaryButtonText,
+       this.primaryButtonRoute,
       this.secondaryButtonText,
       this.secondaryButtonRoute});
 

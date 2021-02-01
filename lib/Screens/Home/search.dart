@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/screens/home/custom_tile.dart';
-import 'package:helpdesk_2/screens/home/helpers_profile.dart';
+// import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:helpdesk_shift/models/helper.dart';
+import 'package:helpdesk_shift/screens/home/custom_tile.dart';
+import 'package:helpdesk_shift/screens/home/helpers_profile.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -12,46 +12,50 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  Future<List<Helper>> fetchAllUsers(FirebaseUser currentUser) async {
-    QuerySnapshot querySnapshot =
-        await Firestore.instance.collection("userData").getDocuments();
-    List<Helper> helperList = List<Helper>();
-    for (var i = 0; i < querySnapshot.documents.length; i++) {
-      if (querySnapshot.documents[i].documentID != currentUser.uid) {
-        helperList.add(Helper.fromMap(querySnapshot.documents[i].data));
-      }
-    }
-    return helperList;
-  }
-
-  List<Helper> helperSearchList;
+  var helperSearchList = [];
   String query = "";
   TextEditingController searchController = TextEditingController();
+  var currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     super.initState();
-
-    FirebaseAuth.instance.currentUser().then((FirebaseUser user) {
-      fetchAllUsers(user).then((List<Helper> list) {
-        setState(() {
-          helperSearchList = list;
-        });
-      });
-    });
+    // gettingUsers();
+    fetchAllUsers(currentUser);
+    // print("hgfhg");
   }
 
+  fetchAllUsers(var currentUser) async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection("userData").get();
+    List helperList = [];
+    for (var i = 0; i < querySnapshot.docs.length; i++) {
+      if (querySnapshot.docs[i].id != currentUser.uid) {
+        // print(querySnapshot.docs[i].data());
+        var map = querySnapshot.docs[i].data();
+        helperList.add(Helper.fromMap(map));
+        // print("FetchAll USers $helperList");
+      }
+    }
+    setState(() {
+      // print("GettingUsers $list");
+      helperSearchList = helperList;
+    });
+    return helperList;
+  }
+
+  // gettingUsers() {
+  //   fetchAllUsers(currentUser).then((list) {
+  //     setState(() {
+  //       print("GettingUsers $list");
+  //       helperSearchList = list;
+  //     });
+  //   });
+  // }
+
   searchAppBar(BuildContext context) {
-    return GradientAppBar(
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+    return AppBar(
+      backgroundColor: Color(0xff3282b8),
       elevation: 0,
       bottom: PreferredSize(
           child: Padding(
@@ -81,24 +85,26 @@ class _SearchScreenState extends State<SearchScreen> {
                       // searchController.clear();
                     }),
                 border: InputBorder.none,
-                hintText: "Search",
+                hintText: "Search Name or Skills",
                 hintStyle: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 35,
+                    fontSize: 30,
                     color: Color(0xffffffff)),
               ),
             ),
           ),
-          preferredSize: const Size.fromHeight(kToolbarHeight + 20)),
+          preferredSize: const Size.fromHeight(kToolbarHeight - 30)),
     );
   }
 
   buildSuggestions(String query) {
-    final List<Helper> suggestionList = query.isEmpty
+    // print("dshfshf $helperSearchList");
+    final List suggestionList = query.isEmpty
         ? []
-        : helperSearchList.where((Helper user) {
+        : helperSearchList.where((user) {
             String _query = query.toLowerCase();
-            String _getName = user.name.toLowerCase();
+            print(user);
+            String _getName = user.name.toString().toLowerCase();
             String _getSkill1 = user.skills[0].toString().toLowerCase();
             String _getSkill2 = user.skills[1].toString().toLowerCase();
             String _getSkill3 = user.skills[2].toString().toLowerCase();
@@ -110,8 +116,11 @@ class _SearchScreenState extends State<SearchScreen> {
             bool matchesSkill3 = _getSkill3.contains(_query);
             bool matchesSkill4 = _getSkill4.contains(_query);
 
-
-            return (matchesName||matchesSkill1||matchesSkill2||matchesSkill3||matchesSkill4);
+            return (matchesName ||
+                matchesSkill1 ||
+                matchesSkill2 ||
+                matchesSkill3 ||
+                matchesSkill4);
           }).toList();
     return ListView.builder(
       itemCount: suggestionList.length,
@@ -138,13 +147,26 @@ class _SearchScreenState extends State<SearchScreen> {
             backgroundImage: NetworkImage(searchedUser.photoURL),
           ),
           title: Text(
-            searchedUser.email,
+            searchedUser.name,
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          subtitle: Text(
-            searchedUser.name,
-            style: TextStyle(color: Color(0xff8f8f8f)),
-          ),
+          subtitle: searchedUser.isAvailable
+              ? Text(
+                  "Available",
+                  // .substring(1, (searchedUser.skills.toString().length - 1)),
+                  style: TextStyle(color: Colors.green, fontSize: 12),
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                )
+              : Text(
+                  "Not Available",
+                  // .substring(1, (searchedUser.skills.toString().length - 1)),
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                ),
         );
       },
     );

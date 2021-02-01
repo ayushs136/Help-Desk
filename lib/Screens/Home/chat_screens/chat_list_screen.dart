@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/models/contact.dart';
-import 'package:helpdesk_2/provider/user_provider.dart';
-import 'package:helpdesk_2/resources/chat_methods.dart';
-import 'package:helpdesk_2/screens/home/chat_screens/widgets/contact_view.dart';
-import 'package:helpdesk_2/screens/home/chat_screens/widgets/new_chat_button.dart';
-
-import 'package:helpdesk_2/services/customTile.dart';
+import 'package:helpdesk_shift/models/contact.dart';
+import 'package:helpdesk_shift/provider/user_provider.dart';
+import 'package:helpdesk_shift/resources/chat_methods.dart';
+import 'package:helpdesk_shift/screens/home/chat_screens/widgets/contact_view.dart';
+import 'package:helpdesk_shift/screens/home/chat_screens/widgets/new_chat_button.dart';
 import 'package:provider/provider.dart';
 
 import 'quite_box.dart';
@@ -15,8 +13,15 @@ class ChatListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Chats"),
+        centerTitle: true,
+        bottomOpacity: 40,
+        backgroundColor: Color(0xff3282b8),
+        shadowColor: Colors.grey,
+        elevation: 20,
+      ),
       backgroundColor: Colors.black,
-      // appBar: customAppBar(context),
       floatingActionButton: NewChatButton(),
       body: ChatListContainer(),
     );
@@ -28,7 +33,9 @@ class ChatListContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserProvider userProvider = Provider.of<UserProvider>(context);
+    final UserProvider userProvider = Provider.of<UserProvider>(
+      context,
+    );
 
     return Container(
       child: StreamBuilder<QuerySnapshot>(
@@ -37,27 +44,27 @@ class ChatListContainer extends StatelessWidget {
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              var docList = snapshot.data.documents;
+              var docList = snapshot.data.docs;
+
               if (docList.isEmpty) {
                 return QuietBox();
-              } else {
-                return ListView.builder(
-                  padding: EdgeInsets.all(10),
-                  itemCount: docList.length,
-                  itemBuilder: (context, index) {
-                    Contact contact = Contact.fromMap(docList[index].data);
-                    return ContactView(contact);
-                  },
-                );
               }
+              return ListView.builder(
+                padding: EdgeInsets.all(10),
+                itemCount: docList.length,
+                itemBuilder: (context, index) {
+                  Contact contact = Contact.fromMap(docList[index].data());
 
-              return Center(child: CircularProgressIndicator(),);
+                  return ContactView(contact);
+                },
+              );
             }
+
+            return Center(child: CircularProgressIndicator());
           }),
     );
   }
 }
-
 // //  return CustomTile(
 //                   mini: false,
 //                   onTap: () {},

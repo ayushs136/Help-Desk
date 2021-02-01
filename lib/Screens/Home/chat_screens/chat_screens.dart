@@ -1,21 +1,22 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/enum/view_state.dart';
-import 'package:helpdesk_2/main.dart';
+import 'package:helpdesk_shift/enum/view_state.dart';
+import 'package:helpdesk_shift/main.dart';
 
-import 'package:helpdesk_2/models/helper.dart';
-import 'package:helpdesk_2/models/message.dart';
-import 'package:helpdesk_2/provider/image_upload_provider.dart';
-import 'package:helpdesk_2/resources/chat_methods.dart';
+import 'package:helpdesk_shift/models/helper.dart';
+import 'package:helpdesk_shift/models/message.dart';
+import 'package:helpdesk_shift/provider/image_upload_provider.dart';
+import 'package:helpdesk_shift/resources/chat_methods.dart';
 
-import 'package:helpdesk_2/screens/home/chat_screens/widgets/cached_image.dart';
-import 'package:helpdesk_2/services/appbar.dart';
-import 'package:helpdesk_2/services/customTile.dart';
-import 'package:helpdesk_2/services/pickImage.dart';
+import 'package:helpdesk_shift/screens/home/chat_screens/widgets/cached_image.dart';
+import 'package:helpdesk_shift/services/appbar.dart';
+import 'package:helpdesk_shift/services/customTile.dart';
+import 'package:helpdesk_shift/services/pickImage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -34,18 +35,16 @@ class _ChatScreenState extends State<ChatScreen> {
   ChatMethods _chatMethods = ChatMethods();
   ScrollController _listScrollController = ScrollController();
   Helper sender;
-  StorageReference _storageReference;
+  Reference _storageReference;
   FocusNode textFieldFocus = FocusNode();
   String _currentUserId;
   ImageUploadProvider _imageUploadProvider;
   bool isWriting = false;
-  Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser currentUser;
-    currentUser = await FirebaseAuth.instance.currentUser();
+  getCurrentUser() async {
+    var currentUser;
+    currentUser = FirebaseAuth.instance.currentUser;
     return currentUser;
   }
-
-
 
   @override
   void initState() {
@@ -103,9 +102,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget messageList() {
     return StreamBuilder(
-      stream: Firestore.instance
+      stream: FirebaseFirestore.instance
           .collection("chats")
-          .document(_currentUserId)
+          .doc(_currentUserId)
           .collection(widget.receiver.uid)
           .orderBy('timestamp', descending: true)
           .snapshots(),
@@ -121,12 +120,12 @@ class _ChatScreenState extends State<ChatScreen> {
         // });
         return ListView.builder(
           padding: EdgeInsets.all(10),
-          itemCount: snapshot.data.documents.length,
+          itemCount: snapshot.data.docs.length,
           controller: _listScrollController,
           reverse: true,
           itemBuilder: (context, index) {
             // mention the arrow syntax if you get the time
-            return chatMessageItem(snapshot.data.documents[index]);
+            return chatMessageItem(snapshot.data.docs[index]);
           },
         );
       },
@@ -134,7 +133,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget chatMessageItem(DocumentSnapshot snapshot) {
-    Message _message = Message.fromMap(snapshot.data);
+    Message _message = Message.fromMap(snapshot.data());
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 15),
@@ -165,7 +164,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(8),
         child: getMessage(message),
       ),
     );
@@ -176,18 +175,19 @@ class _ChatScreenState extends State<ChatScreen> {
     DateTime d = t.toDate();
     return message.type != "image"
         ? Row(
-            mainAxisSize: MainAxisSize.min,
+            // mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text(
-                
-                message.message + "\n",
-                 overflow: TextOverflow.ellipsis,
-                 maxLines: 1,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  
-                  //  overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  message.message,
+                  overflow: TextOverflow.clip,
+                  maxLines: 30,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+
+                    //  overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
               Padding(
@@ -203,7 +203,21 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
           )
         : message.type != null
-            ? CachedImage(message.photoUrl)
+            ? GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+                    return Scaffold(
+                        body: Center(
+                      child: Hero(
+                        tag: 'myHero',
+                        child: CachedNetworkImage(imageUrl: message.photoUrl),
+                      ),
+                    ));
+                  }));
+                },
+                child: Hero(
+                    tag: 'myHero',
+                    child: CachedNetworkImage(imageUrl: message.photoUrl)))
             : Text("Url was null");
   }
 
@@ -261,10 +275,9 @@ class _ChatScreenState extends State<ChatScreen> {
         _storageReference = FirebaseStorage.instance
             .ref()
             .child('${DateTime.now().millisecondsSinceEpoch}');
-        StorageUploadTask _storageUploadTask = _storageReference.putFile(image);
+        UploadTask _storageUploadTask = _storageReference.putFile(image);
 
-        var url =
-            await (await _storageUploadTask.onComplete).ref.getDownloadURL();
+        var url = await (await _storageUploadTask).ref.getDownloadURL();
 
         return url;
       } catch (e) {
@@ -287,31 +300,31 @@ class _ChatScreenState extends State<ChatScreen> {
       var map = _message.toImageMap();
 
       // set
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("chats")
-          .document(_message.senderId)
+          .doc(_message.senderId)
           .collection(_message.receiverId)
           .add(map);
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("chats")
-          .document(_message.receiverId)
+          .doc(_message.receiverId)
           .collection(_message.senderId)
           .add(map);
     }
 
     void uploadImage(
-        {@required File image,
-        @required String receivedId,
-        @required String senderId,
-        @required ImageUploadProvider imageUploadProvider}) async {
+        {File image,
+        String receivedId,
+        String senderId,
+        ImageUploadProvider imageUploadProvider}) async {
       imageUploadProvider.setToLoading();
       String url = await uploadImageToStorage(image);
       imageUploadProvider.setToIdle();
       setImageMsg(url, receivedId, senderId);
     }
 
-    pickImage({@required ImageSource source}) async {
+    pickImage({ImageSource source}) async {
       File selectedImage = await DatabaseServices.pickImage(source: source);
       uploadImage(
           image: selectedImage,
@@ -520,11 +533,7 @@ class ModalTile extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final Function onTap;
-  const ModalTile(
-      {@required this.title,
-      @required this.subtitle,
-      @required this.icon,
-      this.onTap});
+  const ModalTile({this.title, this.subtitle, this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {

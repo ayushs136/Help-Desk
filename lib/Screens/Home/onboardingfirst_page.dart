@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/screens/authentication/google_login.dart';
-import 'package:helpdesk_2/screens/home/custom_dialog.dart';
+import 'package:helpdesk_shift/screens/authentication/google_login.dart';
+import 'package:helpdesk_shift/screens/home/custom_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:helpdesk_2/main.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_shift/main.dart';
+import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
 
 class OnBoarding extends StatefulWidget {
   @override

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
+import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
 
 final primaryColor = const Color(0xff232d36);
 final grayColor = const Color(0xFF939393);
@@ -14,7 +14,7 @@ enum AuthFormType { signIn, signUp, reset, anonymous, convert }
 class SignUpView extends StatefulWidget {
   final AuthFormType authFormType;
 
-  const SignUpView({Key key, @required this.authFormType}) : super(key: key);
+  const SignUpView({ this.authFormType});
 
   @override
   _SignUpViewState createState() =>
@@ -77,9 +77,9 @@ class _SignUpViewState extends State<SignUpView> {
             break;
 
           case AuthFormType.signUp:
-            String uid = await auth.createUserWithEmailAndPassword(
-                _email, _password, _name);
-            print("New user signed up: " + uid);
+            // String uid = await auth.createUserWithEmailAndPassword(
+            //     _email, _password, _name);
+            // print("New user signed up: " + uid);
             Navigator.of(context).pushReplacementNamed("/home");
             break;
           case AuthFormType.reset:
@@ -96,7 +96,7 @@ class _SignUpViewState extends State<SignUpView> {
             Navigator.of(context).pushReplacementNamed("/signUp");
             break;
           case AuthFormType.convert:
-            await auth.convertUserWithEmail(_email, _password, _name);
+            // await auth.convertUserWithEmail(_email, _password, _name);
             print("converting user");
             Navigator.of(context).pop();
             break;
@@ -387,7 +387,7 @@ class _SignUpViewState extends State<SignUpView> {
                     });
                     try {
                       if (authFormType == AuthFormType.convert) {
-                        _auth.convertWithGoogle();
+                        // _auth.convertWithGoogle();
                         Navigator.of(context).pop();
                       } else {
                         await _auth

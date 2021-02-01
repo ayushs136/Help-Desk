@@ -1,14 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:helpdesk_2/provider/image_upload_provider.dart';
-import 'package:helpdesk_2/screens/authentication/auth_services.dart';
-import 'package:helpdesk_2/screens/authentication/provider_widget.dart';
-import 'package:helpdesk_2/screens/authentication/sign_up.dart';
-import 'package:helpdesk_2/screens/home/navigation_view.dart';
-import 'package:helpdesk_2/screens/home/onboardingfirst_page.dart';
-import 'package:helpdesk_2/shared/loading.dart';
+import 'package:helpdesk_shift/provider/image_upload_provider.dart';
+import 'package:helpdesk_shift/provider/user_provider.dart';
+import 'package:helpdesk_shift/screens/authentication/auth_services.dart';
+import 'package:helpdesk_shift/screens/authentication/provider_widget.dart';
+import 'package:helpdesk_shift/screens/authentication/sign_up.dart';
+import 'package:helpdesk_shift/screens/home/navigation_view.dart';
+import 'package:helpdesk_shift/screens/home/onboardingfirst_page.dart';
+import 'package:helpdesk_shift/screens/splash_screen.dart';
+import 'package:helpdesk_shift/shared/loading.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -21,13 +28,17 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<ImageUploadProvider>(
             create: (context) => ImageUploadProvider(),
           ),
+          ChangeNotifierProvider<UserProvider>(
+            create: (context) => UserProvider(),
+          ),
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Help Desk 2.0',
           theme: ThemeData(
-            primarySwatch: Colors.teal,
+            primarySwatch: Colors.blue,
           ),
-          home: HomeController(),
+          home: SplashScreen(),
           routes: <String, WidgetBuilder>{
             "/signUp": (BuildContext context) =>
                 SignUpView(authFormType: AuthFormType.signUp),
@@ -70,6 +81,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return OnBoarding();
+    return SplashScreen();
   }
 }
