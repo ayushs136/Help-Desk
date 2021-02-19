@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:helpdesk_shift/main.dart';
 import 'package:helpdesk_shift/provider/assets.dart';
-import 'package:helpdesk_shift/screens/home/onboardingfirst_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
@@ -27,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   displaySplash() {
     Timer(
-      Duration(seconds: 2),
+      Duration(milliseconds: 1500),
       () async {
         Navigator.pushAndRemoveUntil(
           context,

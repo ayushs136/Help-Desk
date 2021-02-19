@@ -140,7 +140,8 @@ class _SearchScreenState extends State<SearchScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => HelperProfile(helper: searchedUser)));
+                    builder: (context) =>
+                        HelperProfile(helperUid: searchedUser.uid)));
           },
           leading: CircleAvatar(
             backgroundColor: Colors.grey,

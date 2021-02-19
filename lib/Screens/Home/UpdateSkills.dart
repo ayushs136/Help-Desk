@@ -11,7 +11,7 @@ class UpdateSkills extends StatefulWidget {
   final Helper helper;
   final Skills skills;
 
-  UpdateSkills({ this.helper,  this.skills, Key key});
+  UpdateSkills({this.helper, this.skills, Key key});
 
   @override
   _UpdateSkillsState createState() => _UpdateSkillsState();
@@ -148,8 +148,8 @@ class _UpdateSkillsState extends State<UpdateSkills> {
                 final uid =
                     await ProviderWidget.of(context).auth.getCurrentUID();
 
-                FirebaseUser currentUser;
-                currentUser =  _auth.currentUser;
+                var currentUser;
+                currentUser = _auth.currentUser;
                 helper = Helper(
                   email: currentUser.email,
                   name: currentUser.displayName,

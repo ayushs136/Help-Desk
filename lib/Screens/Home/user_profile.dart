@@ -51,26 +51,32 @@ class _UserProfileState extends State<UserProfile> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
-            floatingActionButton: RaisedButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.black)),
-              color: Colors.teal,
-              child: Icon(Icons.edit),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UpdateSkills(
-                              helper: newHelper,
-                              skills: newSkills,
-                            )));
-              },
-            ),
+            // floatingActionButton: RaisedButton(
+            //   shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(18.0),
+            //       side: BorderSide(color: Colors.black)),
+            //   color: Colors.teal,
+            //   child: Icon(Icons.edit),
+            //   onPressed: () {},
+            // ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerFloat,
             backgroundColor: Color(0xff000000),
             appBar: AppBar(
+              leading: FlatButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdateSkills(
+                                  helper: newHelper,
+                                  skills: newSkills,
+                                )));
+                  },
+                  child: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  )),
               actions: [
                 FlatButton(
                   child: Icon(
@@ -91,11 +97,12 @@ class _UserProfileState extends State<UserProfile> {
               ],
               centerTitle: true,
               title: Text(
-                "Helper's Profile",
+                "${snapshot.data.name.toString().toUpperCase()}'s Profile",
                 textAlign: TextAlign.center,
               ),
               backgroundColor: Color(0xff000000),
-              elevation: 0.0,
+              elevation: 10.0,
+              shadowColor: Colors.grey[500],
               // actions: <Widget>[
               //   ListTile(
               //     title: Text(
@@ -166,13 +173,15 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      snapshot.data.skills[0] +
-                          "\n" +
-                          snapshot.data.skills[1] +
-                          "\n" +
-                          snapshot.data.skills[2] +
-                          "\n" +
-                          snapshot.data.skills[3],
+                      "${(snapshot.data.skills == null) ? 'N/A' : (snapshot.data.skills[0]) + " | " + snapshot.data.skills[1] + " | " + snapshot.data.skills[2] + " | " + snapshot.data.skills[3]}",
+
+                      // snapshot.data.skills[0] +
+                      //     "\n" +
+                      //     snapshot.data.skills[1] +
+                      //     "\n" +
+                      //     snapshot.data.skills[2] +
+                      //     "\n" +
+                      //     snapshot.data.skills[3],
 
                       // '8',
                       style: TextStyle(

@@ -9,6 +9,7 @@ import 'package:helpdesk_shift/screens/home/addPost.dart';
 import 'package:helpdesk_shift/screens/home/friend_requests.dart';
 import 'package:helpdesk_shift/screens/home/helpers_profile.dart';
 import 'package:helpdesk_shift/screens/home/user_profile.dart';
+import 'package:helpdesk_shift/screens/home/widgets/create_dialog.dart';
 
 import 'package:timeago/timeago.dart' as tAgo;
 
@@ -54,7 +55,7 @@ class _FeedsState extends State<Feeds> {
     // }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: darkMode ? Colors.black : Colors.white,
       appBar: AppBar(
         title: Text(
           "Helpers Feeds",
@@ -63,12 +64,24 @@ class _FeedsState extends State<Feeds> {
         centerTitle: true,
         bottomOpacity: 40,
         backgroundColor: darkMode ? Colors.black : Colors.white,
-        shadowColor: Colors.grey,
+        shadowColor: Colors.grey[500],
         elevation: 20,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(FontAwesomeIcons.userFriends,
-              color: darkMode ? Colors.white : Colors.black),
+        leading: InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => UpdateDialog(
+                dialogText: "",
+                fileURL: "",
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(FontAwesomeIcons.userFriends,
+                color: darkMode ? Colors.white : Colors.black),
+          ),
         ),
         actions: [
           Padding(
@@ -100,7 +113,19 @@ class _FeedsState extends State<Feeds> {
           )
         ],
       ),
-      body: SingleChildScrollView(child: PostStream(darkMode: darkMode)),
+      body: SingleChildScrollView(
+          child: Column(
+        children: [
+          SizedBox(
+            height: 200,
+            width: 400,
+            child: Card(
+              color: Colors.yellow,
+            ),
+          ),
+          PostStream(darkMode: darkMode),
+        ],
+      )),
     );
   }
 }
@@ -195,7 +220,7 @@ class _PostStreamState extends State<PostStream> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: snapshot.data.docs.length,
             itemBuilder: (BuildContext context, int index) {
-              DocumentSnapshot helperDoc = snapshot.data.docs[index];
+              Map<String, dynamic> helperDoc = snapshot.data.docs[index].data();
               // FirebaseFirestore.instance
               //     .collection("userData")
               //     .doc(helperDoc.data()['likes'][0].toString())
@@ -444,20 +469,25 @@ class _PostStreamState extends State<PostStream> {
                   //   color: Colors.black,
                   // ),
 
-                  Container(
-                    decoration: BoxDecoration(
-                      // borderRadius: BorderRadius.circular(8.0),
-                      color: widget.darkMode ? Colors.black : Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: widget.darkMode ? Colors.white : Colors.black,
-                          blurRadius: 2.0,
-                          spreadRadius: 0.0,
-                          offset: Offset(
-                              2.0, 2.0), // shadow direction: bottom right
-                        )
-                      ],
-                    ),
+                  Card(
+                    elevation: 30,
+                    // borderOnForeground: true,
+                    shadowColor:
+                        widget.darkMode ? Colors.grey[500] : Colors.black,
+                    color: widget.darkMode ? Colors.black : Colors.white,
+                    // decoration: BoxDecoration(
+                    //   // borderRadius: BorderRadius.circular(8.0),
+                    //
+                    //   boxShadow: [
+                    //     BoxShadow(
+                    //       color: widget.darkMode ? Colors.white : Colors.black,
+                    //       blurRadius: 2.0,
+                    //       spreadRadius: 0.0,
+                    //       offset: Offset(
+                    //           2.0, 2.0), // shadow direction: bottom right
+                    //     )
+                    //   ],
+                    // ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -473,14 +503,19 @@ class _PostStreamState extends State<PostStream> {
                                 children: <Widget>[
                                   GestureDetector(
                                     onTap: () {
-                                      if (helperDoc.data()['uid'] != uid) {
+                                      var tempUID = helperDoc['uid'];
+
+                                      if (tempUID != uid) {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   HelperProfile(
-                                                      helper: Helper.fromMap(
-                                                          helperDoc.data())),
+                                                // helper: Helper.fromMap(
+                                                //     helperDoc.data()
+                                                //     ),
+                                                helperUid: tempUID,
+                                              ),
                                             ));
                                       } else {
                                         Navigator.push(
@@ -499,11 +534,9 @@ class _PostStreamState extends State<PostStream> {
                                         image: new DecorationImage(
                                             fit: BoxFit.fill,
                                             image: new NetworkImage(
-                                                helperDoc.data()['photoURL'] ==
-                                                        null
+                                                helperDoc['photoURL'] == null
                                                     ? ''
-                                                    : helperDoc
-                                                        .data()['photoURL'])),
+                                                    : helperDoc['photoURL'])),
                                       ),
                                     ),
                                   ),
@@ -511,7 +544,7 @@ class _PostStreamState extends State<PostStream> {
                                     width: 10.0,
                                   ),
                                   new Text(
-                                    helperDoc.data()['username'],
+                                    helperDoc['username'],
                                     style: TextStyle(
                                         color: widget.darkMode
                                             ? Colors.white
@@ -527,35 +560,35 @@ class _PostStreamState extends State<PostStream> {
                             ],
                           ),
                         ),
-                        if (helperDoc.data()['type'] == 1)
+                        if (helperDoc['type'] == 1)
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              helperDoc.data()['tweet'],
+                              helperDoc['tweet'],
                               style: myStyle(
                                   12,
                                   widget.darkMode ? Colors.white : Colors.black,
                                   FontWeight.w400),
                             ),
                           ),
-                        if (helperDoc.data()['type'] == 2)
+                        if (helperDoc['type'] == 2)
                           Padding(
                             padding: const EdgeInsets.all(1.0),
                             child: Container(
                               // fit: FlexFit.loose,
                               child: CachedNetworkImage(
-                                imageUrl: helperDoc.data()['image'],
+                                imageUrl: helperDoc['image'],
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                        if (helperDoc.data()['type'] == 3)
+                        if (helperDoc['type'] == 3)
                           Column(
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  helperDoc.data()['tweet'],
+                                  helperDoc['tweet'],
                                   style: myStyle(
                                       12,
                                       widget.darkMode
@@ -575,33 +608,29 @@ class _PostStreamState extends State<PostStream> {
                                             : Colors.black,
                                         body: Center(
                                           child: Hero(
-                                            tag: 'picHero' +
-                                                helperDoc.data()['id'],
+                                            tag: 'picHero' + helperDoc['id'],
                                             child: CachedNetworkImage(
                                                 imageUrl:
-                                                    helperDoc.data()['image'] ==
-                                                            null
+                                                    helperDoc['image'] == null
                                                         ? ''
-                                                        : helperDoc
-                                                            .data()['image']),
+                                                        : helperDoc['image']),
                                           ),
                                         ));
                                   }));
                                 },
                                 onDoubleTap: () {
-                                  likepost(helperDoc.data()['id']);
+                                  likepost(helperDoc['id']);
                                 },
                                 child: InteractiveViewer(
                                   maxScale: 5.0,
                                   child: SafeArea(
                                     // fit: FlexFit.loose,
                                     child: Hero(
-                                      tag: 'picHero' + helperDoc.data()['id'],
+                                      tag: 'picHero' + helperDoc['id'],
                                       child: CachedNetworkImage(
-                                        imageUrl:
-                                            helperDoc.data()['image'] == null
-                                                ? ''
-                                                : helperDoc.data()['image'],
+                                        imageUrl: helperDoc['image'] == null
+                                            ? ''
+                                            : helperDoc['image'],
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -620,15 +649,14 @@ class _PostStreamState extends State<PostStream> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   InkWell(
-                                    onTap: () =>
-                                        likepost(helperDoc.data()['id']),
+                                    onTap: () => likepost(helperDoc['id']),
                                     child: Row(
                                       children: [
                                         // SizedBox(height: 30),
                                         // Divider(
                                         //   color: Colors.grey,
                                         // ),
-                                        helperDoc.data()['likes'].contains(uid)
+                                        helperDoc['likes'].contains(uid)
                                             ? Icon(
                                                 Icons.favorite,
                                                 color: Colors.red,
@@ -643,7 +671,7 @@ class _PostStreamState extends State<PostStream> {
                                               ),
                                         SizedBox(width: 10.0),
                                         Text(
-                                          (helperDoc.data()['likes'].length + 1)
+                                          (helperDoc['likes'].length + 1)
                                               .toString(),
                                           style: myStyle(
                                               15,
@@ -675,9 +703,7 @@ class _PostStreamState extends State<PostStream> {
                                         ),
                                         SizedBox(width: 10.0),
                                         Text(
-                                          helperDoc
-                                              .data()['commentsCount']
-                                              .toString(),
+                                          helperDoc['commentsCount'].toString(),
                                           style: myStyle(
                                               15,
                                               widget.darkMode
@@ -693,8 +719,7 @@ class _PostStreamState extends State<PostStream> {
                                   ),
                                   InkWell(
                                     onTap: () => sharePost(
-                                        helperDoc.data()['id'],
-                                        helperDoc.data()['tweet']),
+                                        helperDoc['id'], helperDoc['tweet']),
                                     child: Row(
                                       children: [
                                         Icon(
@@ -706,7 +731,7 @@ class _PostStreamState extends State<PostStream> {
                                         ),
                                         SizedBox(width: 10.0),
                                         Text(
-                                          helperDoc.data()['shares'].toString(),
+                                          helperDoc['shares'].toString(),
                                           style: myStyle(
                                               15,
                                               widget.darkMode
@@ -734,7 +759,7 @@ class _PostStreamState extends State<PostStream> {
                             "Liked by " +
                                 likedName +
                                 " and " +
-                                (helperDoc.data()['likes'].length).toString() +
+                                (helperDoc['likes'].length).toString() +
                                 " others",
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
@@ -777,9 +802,7 @@ class _PostStreamState extends State<PostStream> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
-                            tAgo
-                                .format(helperDoc.data()['time'].toDate())
-                                .toString(),
+                            tAgo.format(helperDoc['time'].toDate()).toString(),
                             style: myStyle(10, Colors.grey, FontWeight.bold),
                           ),
                         ),
