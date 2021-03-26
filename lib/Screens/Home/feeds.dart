@@ -9,6 +9,7 @@ import 'package:helpdesk_shift/screens/home/addPost.dart';
 import 'package:helpdesk_shift/screens/home/friend_requests.dart';
 import 'package:helpdesk_shift/screens/home/helpers_profile.dart';
 import 'package:helpdesk_shift/screens/home/user_profile.dart';
+import 'package:helpdesk_shift/screens/home/widgets/card_overlap_widget.dart';
 import 'package:helpdesk_shift/screens/home/widgets/create_dialog.dart';
 
 import 'package:timeago/timeago.dart' as tAgo;
@@ -68,6 +69,8 @@ class _FeedsState extends State<Feeds> {
         elevation: 20,
         leading: InkWell(
           onTap: () {
+            // Navigator.of(context)
+            //     .push(MaterialPageRoute(builder: (context) => PostCard()));
             showDialog(
               context: context,
               barrierDismissible: false,
